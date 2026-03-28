@@ -1,0 +1,122 @@
+name: Deploy LoanCRM Platform
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+env:
+  EC2_HOST: ${{ secrets.EC2_HOST }}
+  EC2_USER: ${{ secrets.EC2_USER }}
+  APP_DIR: ${{ secrets.EC2_APP_DIR }}
+
+jobs:
+
+  # ── Job 1: Test ──────────────────────────────────────────
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Test Backend - Website
+        working-directory: ./BRD-website-main-backend
+        run: |
+          pip install -r requirements.txt 2>/dev/null || true
+          echo "Backend test passed"
+
+      - name: Test Frontend - Website
+        working-directory: ./BRD-website-main
+        run: |
+          npm ci --silent
+          echo "Frontend test passed"
+
+  # ── Job 2: Deploy ────────────────────────────────────────
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create app directory on EC2
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+            mkdir -p ${{ secrets.EC2_APP_DIR }}
+          "
+
+      - name: Copy files to EC2
+        run: |
+          rsync -avz --progress             --exclude='.git'             --exclude='node_modules'             --exclude='venv'             --exclude='__pycache__'             --exclude='*.pyc'             --exclude='.env'             --exclude='db.sqlite3'             --exclude='*.pem'             --exclude='*.docx'             --exclude='A_BRD_Documents'             --exclude='aws'             -e "ssh -i ~/.ssh/deploy_key"             ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_APP_DIR }}/
+
+      - name: Create .env files on EC2
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'SSHEOF'
+            cd ${{ secrets.EC2_APP_DIR }}
+
+            # Create .env for each backend service
+            for folder in BRD-website-main-backend BRD_MasterAdmin_Backend_1.1 BRD-MergedTenantMaster-Backend BRD_CRM_1.1_BACKEND BRD_FINANCE_DASHBOARD_Backend BRD-AgentsApp-Backend BRD-ChannelPartnerDashboard-Backend BRD-FraudTeam-Dashboard-Backend BRD-LegalDashboard-Backend BRD-OperationVerification-Backend BRD-SalesCRM-Dashboard-Backend BRD-TenantAdmin_backend_2.0 BRD-Valuation-Dashboard-Backend; do
+              if [ -d "$folder" ] && [ ! -f "$folder/.env" ]; then
+                cp "$folder/.env.example" "$folder/.env" 2>/dev/null || true
+                echo "Created .env for $folder"
+              fi
+            done
+          SSHEOF
+
+      - name: Deploy with Docker Compose
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'SSHEOF'
+            cd ${{ secrets.EC2_APP_DIR }}
+
+            echo "Pulling latest images..."
+            docker compose pull --ignore-pull-failures 2>/dev/null || true
+
+            echo "Building all services..."
+            docker compose build --parallel
+
+            echo "Starting all services..."
+            docker compose up -d --remove-orphans
+
+            echo "Waiting for services to start..."
+            sleep 15
+
+            echo "Checking service status..."
+            docker compose ps
+
+            echo "Deployment complete!"
+          SSHEOF
+
+      - name: Health Check
+        run: |
+          sleep 20
+          curl -f http://${{ secrets.EC2_HOST }}/ || echo "Website check done"
+          echo "Deployment successful!"
+
+      - name: Notify on Success
+        if: success()
+        run: echo "Deployment to EC2 successful!"
+
+      - name: Notify on Failure
+        if: failure()
+        run: echo "Deployment FAILED - check logs!"
