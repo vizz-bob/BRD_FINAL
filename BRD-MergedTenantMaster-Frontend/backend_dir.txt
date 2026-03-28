@@ -1,0 +1,53 @@
+ Volume in drive C is OS
+ Volume Serial Number is 5A4E-BABF
+
+ Directory of C:\Users\harik\BRD-MergedTenantMaster-Backend
+
+20-03-2026  00:47    <DIR>          .
+20-03-2026  00:05    <DIR>          ..
+19-03-2026  23:41               208 .gitignore
+19-03-2026  23:52    <DIR>          access_control
+19-03-2026  23:52    <DIR>          activeloans
+19-03-2026  23:52    <DIR>          adminpanel
+19-03-2026  23:52    <DIR>          auth_service
+19-03-2026  23:52    <DIR>          banking
+19-03-2026  23:52    <DIR>          branches
+19-03-2026  23:52    <DIR>          brd_platform
+19-03-2026  23:52    <DIR>          businesses
+19-03-2026  23:52    <DIR>          channel_partners
+19-03-2026  23:52    <DIR>          communications
+19-03-2026  23:52    <DIR>          compliance
+19-03-2026  23:52    <DIR>          crm
+19-03-2026  23:52    <DIR>          dashboard
+20-03-2026  00:47         2,457,600 db.sqlite3
+19-03-2026  23:52    <DIR>          disbursement
+19-03-2026  23:41               839 Dockerfile
+19-03-2026  23:52    <DIR>          documents
+19-03-2026  23:52    <DIR>          engine
+19-03-2026  23:52    <DIR>          escalation
+19-03-2026  23:52    <DIR>          finance
+19-03-2026  23:52    <DIR>          frontend_mock
+19-03-2026  23:52    <DIR>          integrations
+19-03-2026  23:52    <DIR>          internal
+19-03-2026  23:52    <DIR>          knowledge_base
+19-03-2026  23:52    <DIR>          lms
+19-03-2026  23:52    <DIR>          loan_collections
+19-03-2026  23:52    <DIR>          los
+19-03-2026  23:41               690 manage.py
+19-03-2026  23:52    <DIR>          partners
+19-03-2026  23:52    <DIR>          product
+19-03-2026  23:52    <DIR>          reporting
+19-03-2026  23:41               403 requirements.txt
+19-03-2026  23:52    <DIR>          risk_engine
+19-03-2026  23:52    <DIR>          role
+19-03-2026  23:52    <DIR>          subscriptions
+19-03-2026  23:52    <DIR>          system_settings
+19-03-2026  23:52    <DIR>          tenants
+19-03-2026  23:52    <DIR>          tenantuser
+19-03-2026  23:52    <DIR>          tenant_user
+19-03-2026  23:52    <DIR>          ticket
+19-03-2026  23:52    <DIR>          training
+19-03-2026  23:52    <DIR>          users
+19-03-2026  23:49    <DIR>          venv
+               5 File(s)      2,459,740 bytes
+              41 Dir(s)  62,622,797,824 bytes free

@@ -1,0 +1,197 @@
+[
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 1,
+    "fields": {
+      "name": "Rahul Sharma",
+      "mobile_number": "9876543210",
+      "email": "rahul.sharma@gmail.com",
+      "product_selection": "home_loan",
+      "country": "India",
+      "state": "Maharashtra",
+      "city": "Mumbai"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 2,
+    "fields": {
+      "name": "Priya Mehta",
+      "mobile_number": "9823456781",
+      "email": "priya.mehta@yahoo.com",
+      "product_selection": "personal_loan",
+      "country": "India",
+      "state": "Delhi",
+      "city": "New Delhi"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 3,
+    "fields": {
+      "name": "Amit Verma",
+      "mobile_number": "9712345678",
+      "email": "amit.verma@outlook.com",
+      "product_selection": "car_loan",
+      "country": "India",
+      "state": "Karnataka",
+      "city": "Bangalore"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 4,
+    "fields": {
+      "name": "Sneha Patel",
+      "mobile_number": "9654321098",
+      "email": "sneha.patel@gmail.com",
+      "product_selection": "business_loan",
+      "country": "India",
+      "state": "Gujarat",
+      "city": "Ahmedabad"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 5,
+    "fields": {
+      "name": "Vikram Singh",
+      "mobile_number": "9543210987",
+      "email": "vikram.singh@gmail.com",
+      "product_selection": "home_loan",
+      "country": "India",
+      "state": "Uttar Pradesh",
+      "city": "Lucknow"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 6,
+    "fields": {
+      "name": "Neha Gupta",
+      "mobile_number": "9432109876",
+      "email": "neha.gupta@rediffmail.com",
+      "product_selection": "education_loan",
+      "country": "India",
+      "state": "Tamil Nadu",
+      "city": "Chennai"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 7,
+    "fields": {
+      "name": "Arjun Reddy",
+      "mobile_number": "9321098765",
+      "email": "arjun.reddy@gmail.com",
+      "product_selection": "personal_loan",
+      "country": "India",
+      "state": "Telangana",
+      "city": "Hyderabad"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 8,
+    "fields": {
+      "name": "Kavitha Nair",
+      "mobile_number": "9210987654",
+      "email": "kavitha.nair@gmail.com",
+      "product_selection": "home_loan",
+      "country": "India",
+      "state": "Kerala",
+      "city": "Kochi"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 9,
+    "fields": {
+      "name": "Rohit Joshi",
+      "mobile_number": "9109876543",
+      "email": "rohit.joshi@gmail.com",
+      "product_selection": "car_loan",
+      "country": "India",
+      "state": "Rajasthan",
+      "city": "Jaipur"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 10,
+    "fields": {
+      "name": "Ananya Bose",
+      "mobile_number": "9098765432",
+      "email": "ananya.bose@gmail.com",
+      "product_selection": "business_loan",
+      "country": "India",
+      "state": "West Bengal",
+      "city": "Kolkata"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 11,
+    "fields": {
+      "name": "Suresh Kumar",
+      "mobile_number": "8987654321",
+      "email": "suresh.kumar@gmail.com",
+      "product_selection": "home_loan",
+      "country": "India",
+      "state": "Punjab",
+      "city": "Chandigarh"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 12,
+    "fields": {
+      "name": "Deepika Rao",
+      "mobile_number": "8876543210",
+      "email": "deepika.rao@gmail.com",
+      "product_selection": "personal_loan",
+      "country": "India",
+      "state": "Andhra Pradesh",
+      "city": "Visakhapatnam"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 13,
+    "fields": {
+      "name": "Kiran Desai",
+      "mobile_number": "8765432109",
+      "email": "kiran.desai@gmail.com",
+      "product_selection": "car_loan",
+      "country": "India",
+      "state": "Maharashtra",
+      "city": "Pune"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 14,
+    "fields": {
+      "name": "Pooja Agarwal",
+      "mobile_number": "8654321098",
+      "email": "pooja.agarwal@gmail.com",
+      "product_selection": "education_loan",
+      "country": "India",
+      "state": "Madhya Pradesh",
+      "city": "Bhopal"
+    }
+  },
+  {
+    "model": "bulk_upload.manualentry",
+    "pk": 15,
+    "fields": {
+      "name": "Manish Tiwari",
+      "mobile_number": "8543210987",
+      "email": "manish.tiwari@gmail.com",
+      "product_selection": "business_loan",
+      "country": "India",
+      "state": "Bihar",
+      "city": "Patna"
+    }
+  }
+]

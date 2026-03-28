@@ -1,0 +1,31 @@
+name: Rollback Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for rollback'
+        required: true
+        default: 'Emergency rollback'
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Rollback on EC2
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'SSHEOF'
+            cd ${{ secrets.EC2_APP_DIR }}
+            echo "Rolling back..."
+            docker compose down
+            docker compose up -d --remove-orphans
+            docker compose ps
+            echo "Rollback complete!"
+          SSHEOF

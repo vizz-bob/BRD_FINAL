@@ -1,0 +1,358 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Privacy Policy - {{ block.super }}{% endblock %}
+
+{% block extrastyle %}
+<style>
+    .privacy-policy-container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    
+    .policy-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 3px solid #417690;
+        padding-bottom: 20px;
+    }
+    
+    .policy-header h1 {
+        color: #417690;
+        margin: 0;
+        font-size: 28px;
+    }
+    
+    .policy-version {
+        color: #999;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    
+    .policy-section {
+        margin: 30px 0;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-left: 4px solid #417690;
+    }
+    
+    .policy-section h2 {
+        color: #417690;
+        margin-top: 0;
+        font-size: 18px;
+    }
+    
+    .policy-section p {
+        line-height: 1.6;
+        color: #333;
+    }
+    
+    .have-questions-section {
+        margin: 40px 0;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 8px;
+        text-align: center;
+    }
+    
+    .have-questions-section h2 {
+        color: white;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .have-questions-section p {
+        font-size: 16px;
+        margin-bottom: 30px;
+        color: rgba(255,255,255,0.9);
+    }
+    
+    .support-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .action-card {
+        background-color: rgba(255,255,255,0.1);
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+    
+    .action-card:hover {
+        background-color: rgba(255,255,255,0.2);
+        border-color: white;
+        transform: translateY(-3px);
+    }
+    
+    .action-card h3 {
+        color: white;
+        margin: 0 0 10px 0;
+        font-size: 16px;
+    }
+    
+    .action-card .action-value {
+        background-color: rgba(255,255,255,0.2);
+        padding: 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 12px;
+        word-break: break-all;
+        color: #fff;
+    }
+    
+    .action-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+    
+    .support-hours {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 5px;
+        font-size: 14px;
+    }
+    
+    .raise-ticket-btn {
+        background-color: white;
+        color: #667eea;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        display: inline-block;
+        text-decoration: none;
+    }
+    
+    .raise-ticket-btn:hover {
+        background-color: rgba(255,255,255,0.9);
+        transform: scale(1.05);
+    }
+    
+    .support-contact-info {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .support-contact-info h3 {
+        color: #856404;
+        margin-top: 0;
+    }
+    
+    .contact-detail {
+        margin: 8px 0;
+        color: #856404;
+    }
+    
+    .quick-summary {
+        background-color: #e7f3ff;
+        border-left: 4px solid #2196F3;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 3px;
+    }
+    
+    .quick-summary h3 {
+        color: #0c5aa0;
+        margin-top: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="privacy-policy-container">
+    
+    <!-- Header -->
+    <div class="policy-header">
+        <h1>{{ privacy_policy.title }}</h1>
+        <div class="policy-version">Version {{ privacy_policy.version }} | Last Updated: {{ privacy_policy.last_updated|date:"M d, Y" }}</div>
+    </div>
+    
+    <!-- Quick Summary -->
+    {% if privacy_policy.quick_summary %}
+    <div class="quick-summary">
+        <h3>Quick Summary</h3>
+        <p>{{ privacy_policy.quick_summary|linebreaks }}</p>
+    </div>
+    {% endif %}
+    
+    <!-- Introduction -->
+    {% if privacy_policy.introduction %}
+    <div class="policy-section">
+        <p>{{ privacy_policy.introduction|linebreaks }}</p>
+    </div>
+    {% endif %}
+    
+    <!-- 10 Privacy Sections -->
+    <div class="policy-section">
+        <h2>1. Information We Collect</h2>
+        <p>{{ privacy_policy.information_we_collect|linebreaks }}</p>
+    </div>
+    
+    <div class="policy-section">
+        <h2>2. How We Use Your Information</h2>
+        <p>{{ privacy_policy.how_we_use_information|linebreaks }}</p>
+    </div>
+    
+    <div class="policy-section">
+        <h2>3. Information Sharing</h2>
+        <p>{{ privacy_policy.information_sharing|linebreaks }}</p>
+    </div>
+    
+    <div class="policy-section">
+        <h2>4. Data Security</h2>
+        <p>{{ privacy_policy.data_security|linebreaks }}</p>
+    </div>
+    
+    <div class="policy-section">
+        <h2>5. Your Rights and Choices</h2>
+        <p>{{ privacy_policy.your_rights_and_choices|linebreaks }}</p>
+    </div>
+    
+    <div class="policy-section">
+        <h2>6. Data Retention</h2>
+        <p>{{ privacy_policy.data_retention|linebreaks }}</p>
+    </div>
+    
+    <div class="policy-section">
+        <h2>7. Cookies and Tracking</h2>
+        <p>{{ privacy_policy.cookies_and_tracking|linebreaks }}</p>
+    </div>
+    
+    <div class="policy-section">
+        <h2>8. Third Party Services</h2>
+        <p>{{ privacy_policy.third_party_services|linebreaks }}</p>
+    </div>
+    
+    <div class="policy-section">
+        <h2>9. Children's Privacy</h2>
+        <p>{{ privacy_policy.childrens_privacy|linebreaks }}</p>
+    </div>
+    
+    <div class="policy-section">
+        <h2>10. Changes to Privacy Policy</h2>
+        <p>{{ privacy_policy.changes_to_policy|linebreaks }}</p>
+    </div>
+    
+    <!-- Have Questions Section -->
+    <div class="have-questions-section">
+        <h2>❓ Have Questions?</h2>
+        <p>If you have any questions about this Privacy Policy or our privacy practices, we're here to help!</p>
+        
+        {% if support_contact_info %}
+        <div class="support-contact-info">
+            <h3>📞 Contact Support</h3>
+            {% if support_contact_info.phone_number %}
+            <div class="contact-detail">
+                <strong>Phone:</strong> {{ support_contact_info.phone_number }}
+            </div>
+            {% endif %}
+            {% if support_contact_info.whatsapp_number %}
+            <div class="contact-detail">
+                <strong>WhatsApp:</strong> {{ support_contact_info.whatsapp_number }}
+            </div>
+            {% endif %}
+            {% if support_contact_info.email %}
+            <div class="contact-detail">
+                <strong>Email:</strong> {{ support_contact_info.email }}
+            </div>
+            {% endif %}
+            {% if support_contact_info.support_hours %}
+            <div class="contact-detail" style="margin-top: 10px;">
+                <strong>⏰ Support Hours:</strong> {{ support_contact_info.support_hours }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Quick Action Cards -->
+        <div class="support-actions">
+            {% if support_contact_info.phone_number %}
+            <div class="action-card" onclick="callSupport()">
+                <div class="action-icon">☎️</div>
+                <h3>Call Us</h3>
+                <div class="action-value">{{ support_contact_info.phone_number }}</div>
+            </div>
+            {% endif %}
+            
+            {% if support_contact_info.whatsapp_number %}
+            <div class="action-card" onclick="whatsappSupport()">
+                <div class="action-icon">💬</div>
+                <h3>WhatsApp Support</h3>
+                <div class="action-value">{{ support_contact_info.whatsapp_number }}</div>
+            </div>
+            {% endif %}
+            
+            {% if support_contact_info.email %}
+            <div class="action-card" onclick="emailSupport()">
+                <div class="action-icon">📧</div>
+                <h3>Email Support</h3>
+                <div class="action-value">{{ support_contact_info.email }}</div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <!-- Raise Support Ticket -->
+        <div style="margin-top: 30px;">
+            <h3 style="color: white; margin-bottom: 15px;">Need Detailed Assistance?</h3>
+            <a href="/admin/profiles/supportticket/add/" class="raise-ticket-btn">
+                🎫 Raise a Support Ticket
+            </a>
+        </div>
+        
+        {% if support_contact_info.support_hours %}
+        <div class="support-hours">
+            ⏰ {{ support_contact_info.support_hours }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Contact Us Section -->
+    {% if privacy_policy.contact_us %}
+    <div class="policy-section">
+        <h2>Contact Us</h2>
+        <p>{{ privacy_policy.contact_us|linebreaks }}</p>
+    </div>
+    {% endif %}
+    
+</div>
+
+<script>
+function callSupport() {
+    const phone = '{{ support_contact_info.phone_number|escapejs }}';
+    window.location.href = 'tel:' + phone;
+    alert('Call support at: ' + phone);
+}
+
+function whatsappSupport() {
+    const whatsapp = '{{ support_contact_info.whatsapp_number|escapejs }}';
+    const message = 'Hi, I have a question about the privacy policy.';
+    const url = 'https://wa.me/' + whatsapp.replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent(message);
+    window.open(url, '_blank');
+}
+
+function emailSupport() {
+    const email = '{{ support_contact_info.email|escapejs }}';
+    const subject = 'Privacy Policy Query';
+    window.location.href = 'mailto:' + email + '?subject=' + encodeURIComponent(subject);
+}
+</script>
+{% endblock %}

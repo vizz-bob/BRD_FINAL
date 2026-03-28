@@ -1,0 +1,431 @@
+version: '3.9'
+
+networks:
+  loancrm_network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  static_files:
+  media_files:
+
+services:
+
+  # ── REDIS ────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: loancrm_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb
+    volumes:
+      - redis_data:/data
+    networks:
+      - loancrm_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── NGINX ────────────────────────────────────────────────
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: loancrm_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - static_files:/var/www/static:ro
+      - media_files:/var/www/media:ro
+    networks:
+      - loancrm_network
+    depends_on:
+      - website-backend
+      - masteradmin-backend
+      - tenant-backend
+      - crm-backend
+      - finance-backend
+      - agents-backend
+      - channel-backend
+      - fraud-backend
+      - legal-backend
+      - operations-backend
+      - salescrm-backend
+      - tenantadmin-backend
+      - valuation-backend
+      - website-frontend
+      - masteradmin-frontend
+      - tenant-frontend
+      - crm-frontend
+      - finance-frontend
+      - salescrm-frontend
+
+  # ════════════════════════════════════════════════════════
+  # BACKEND SERVICES
+  # ════════════════════════════════════════════════════════
+
+  website-backend:
+    build:
+      context: ./BRD-website-main-backend
+      dockerfile: Dockerfile
+    container_name: loancrm_website_backend
+    restart: unless-stopped
+    expose:
+      - "8000"
+    env_file: ./BRD-website-main-backend/.env
+    volumes:
+      - static_files:/app/staticfiles
+      - media_files:/app/media
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  masteradmin-backend:
+    build:
+      context: ./BRD_MasterAdmin_Backend_1.1
+      dockerfile: Dockerfile
+    container_name: loancrm_masteradmin_backend
+    restart: unless-stopped
+    expose:
+      - "8001"
+    env_file: ./BRD_MasterAdmin_Backend_1.1/.env
+    volumes:
+      - media_files:/app/media
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  tenant-backend:
+    build:
+      context: ./BRD-MergedTenantMaster-Backend
+      dockerfile: Dockerfile
+    container_name: loancrm_tenant_backend
+    restart: unless-stopped
+    expose:
+      - "8002"
+    env_file: ./BRD-MergedTenantMaster-Backend/.env
+    volumes:
+      - media_files:/app/media
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  crm-backend:
+    build:
+      context: ./BRD_CRM_1.1_BACKEND
+      dockerfile: Dockerfile
+    container_name: loancrm_crm_backend
+    restart: unless-stopped
+    expose:
+      - "8003"
+    env_file: ./BRD_CRM_1.1_BACKEND/.env
+    volumes:
+      - media_files:/app/media
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  finance-backend:
+    build:
+      context: ./BRD_FINANCE_DASHBOARD_Backend
+      dockerfile: Dockerfile
+    container_name: loancrm_finance_backend
+    restart: unless-stopped
+    expose:
+      - "8004"
+    env_file: ./BRD_FINANCE_DASHBOARD_Backend/.env
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  agents-backend:
+    build:
+      context: ./BRD-AgentsApp-Backend
+      dockerfile: Dockerfile
+    container_name: loancrm_agents_backend
+    restart: unless-stopped
+    expose:
+      - "8005"
+    env_file: ./BRD-AgentsApp-Backend/.env
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  channel-backend:
+    build:
+      context: ./BRD-ChannelPartnerDashboard-Backend
+      dockerfile: Dockerfile
+    container_name: loancrm_channel_backend
+    restart: unless-stopped
+    expose:
+      - "8006"
+    env_file: ./BRD-ChannelPartnerDashboard-Backend/.env
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  fraud-backend:
+    build:
+      context: ./BRD-FraudTeam-Dashboard-Backend
+      dockerfile: Dockerfile
+    container_name: loancrm_fraud_backend
+    restart: unless-stopped
+    expose:
+      - "8007"
+    env_file: ./BRD-FraudTeam-Dashboard-Backend/.env
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  legal-backend:
+    build:
+      context: ./BRD-LegalDashboard-Backend
+      dockerfile: Dockerfile
+    container_name: loancrm_legal_backend
+    restart: unless-stopped
+    expose:
+      - "8008"
+    env_file: ./BRD-LegalDashboard-Backend/.env
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  operations-backend:
+    build:
+      context: ./BRD-OperationVerification-Backend
+      dockerfile: Dockerfile
+    container_name: loancrm_operations_backend
+    restart: unless-stopped
+    expose:
+      - "8009"
+    env_file: ./BRD-OperationVerification-Backend/.env
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  salescrm-backend:
+    build:
+      context: ./BRD-SalesCRM-Dashboard-Backend
+      dockerfile: Dockerfile
+    container_name: loancrm_salescrm_backend
+    restart: unless-stopped
+    expose:
+      - "8010"
+    env_file: ./BRD-SalesCRM-Dashboard-Backend/.env
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  tenantadmin-backend:
+    build:
+      context: ./BRD-TenantAdmin_backend_2.0
+      dockerfile: Dockerfile
+    container_name: loancrm_tenantadmin_backend
+    restart: unless-stopped
+    expose:
+      - "8011"
+    env_file: ./BRD-TenantAdmin_backend_2.0/.env
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  valuation-backend:
+    build:
+      context: ./BRD-Valuation-Dashboard-Backend
+      dockerfile: Dockerfile
+    container_name: loancrm_valuation_backend
+    restart: unless-stopped
+    expose:
+      - "8012"
+    env_file: ./BRD-Valuation-Dashboard-Backend/.env
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # ════════════════════════════════════════════════════════
+  # FRONTEND SERVICES
+  # ════════════════════════════════════════════════════════
+
+  website-frontend:
+    build:
+      context: ./BRD-website-main
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api
+    container_name: loancrm_website_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  masteradmin-frontend:
+    build:
+      context: ./BRD_MasterAdmin_Frontend_1.1
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/admin
+    container_name: loancrm_masteradmin_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  tenant-frontend:
+    build:
+      context: ./BRD-MergedTenantMaster-Frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/tenant
+    container_name: loancrm_tenant_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  crm-frontend:
+    build:
+      context: ./BRD_CRM-1.1
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/crm
+    container_name: loancrm_crm_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  finance-frontend:
+    build:
+      context: ./BRD_FINANCE_DASHBOARD
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/finance
+    container_name: loancrm_finance_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  salescrm-frontend:
+    build:
+      context: ./BRD_SALES_CRM
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/sales
+    container_name: loancrm_salescrm_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  tenantadmin-frontend:
+    build:
+      context: ./BRD_TenantAdmin_Frontend_1.1
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/tenantadmin
+    container_name: loancrm_tenantadmin_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  channel-frontend:
+    build:
+      context: ./BRD-ChannelPartner-Dashboard
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/channel
+    container_name: loancrm_channel_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  fraud-frontend:
+    build:
+      context: ./BRD-FraudTeamDashboard
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/fraud
+    container_name: loancrm_fraud_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  legal-frontend:
+    build:
+      context: ./BRD-LEGAL-dashboard
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/legal
+    container_name: loancrm_legal_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  operations-frontend:
+    build:
+      context: ./BRD-Operation-Verification-Dashboard
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/operations
+    container_name: loancrm_operations_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network
+
+  valuation-frontend:
+    build:
+      context: ./BRD-ValuationDashboard
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://13.232.219.91/api/valuation
+    container_name: loancrm_valuation_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - loancrm_network

@@ -1,0 +1,4 @@
+from .django_compat import apply_python314_compatibility_patch
+
+
+apply_python314_compatibility_patch()

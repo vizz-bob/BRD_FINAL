@@ -1,0 +1,59 @@
+import React,{useEffect,useState} from "react";
+import {FiArrowLeft,FiEdit3} from "react-icons/fi";
+import {useNavigate,useParams} from "react-router-dom";
+import { ruleManagementService } from "../../../../services/ruleManagementService";
+
+export default function ViewAgencyVerificationRule(){
+  const navigate=useNavigate();
+  const {id}=useParams();
+  const [rule,setRule]=useState(null);
+
+  useEffect(()=>{
+    (async()=>{
+      const res = await ruleManagementService.getAgencyVerificationRuleById(id);
+      setRule(res);
+    })();
+  },[id]);
+
+  if(!rule) return null;
+
+  return(
+    <>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <button onClick={()=>navigate(-1)} className="p-2 rounded-xl bg-gray-50"><FiArrowLeft/></button>
+          <h1 className="text-2xl font-bold">View Agency Verification Rule</h1>
+        </div>
+
+        <button onClick={()=>navigate(`/rule-management/verification/agency/edit/${id}`)}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-xl flex items-center gap-2">
+          <FiEdit3/> Edit
+        </button>
+      </div>
+
+      <div className="bg-white p-8 rounded-2xl shadow-md max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+        <Detail label="Agency Type" value={rule.agency_type}/>
+        <Detail label="Verification Stage" value={rule.verification_stage}/>
+        <Detail label="Report Type" value={rule.report_type}/>
+        <Detail label="Turnaround Time (hrs)" value={rule.turnaround_time}/>
+        <Detail label="Remarks" value={rule.remarks}/>
+
+        <div>
+          <p className="text-gray-500">Status</p>
+          <span className={`inline-block mt-1 px-3 py-1 rounded-full text-xs ${
+            rule.status==="ACTIVE"?"bg-green-100 text-green-700":"bg-red-100 text-red-600"
+          }`}>
+            {rule.status}
+          </span>
+        </div>
+      </div>
+    </>
+  );
+}
+
+const Detail=({label,value})=>(
+  <div>
+    <p className="text-gray-500">{label}</p>
+    <p className="font-medium mt-1">{value || "-"}</p>
+  </div>
+);

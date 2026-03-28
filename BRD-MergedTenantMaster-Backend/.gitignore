@@ -1,0 +1,16 @@
+# =========================
+# Python / Django
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+*.log
+staticfiles/
+media/
+.env
+# Ignore SQLite database
+db.sqlite3

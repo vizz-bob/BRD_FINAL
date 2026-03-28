@@ -1,0 +1,10 @@
+/* Global App Styles */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Add any global overrides here */
+.shadow-card {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}

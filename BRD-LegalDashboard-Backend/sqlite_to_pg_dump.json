@@ -1,0 +1,120 @@
+[
+{
+  "model": "Agreement_Approvals.agreement",
+  "pk": 1,
+  "fields": {
+    "agreement_id": "AGR-2026-001",
+    "agreement_type": "Loan Agreement",
+    "client_name": "ABC Technologies Pvt Ltd",
+    "amount": "500000.00",
+    "priority": "Medium",
+    "assigned_to": "Priya Mehta",
+    "status": "Pending",
+    "submitted_date": "2026-03-03"
+  }
+},
+{
+  "model": "Agreement_Approvals.agreement",
+  "pk": 2,
+  "fields": {
+    "agreement_id": "AGR-2026-010",
+    "agreement_type": "Collateral Agreement",
+    "client_name": "srinidhi",
+    "amount": "500000.00",
+    "priority": "High",
+    "assigned_to": "Amit",
+    "status": "Approved",
+    "submitted_date": "2026-03-03"
+  }
+},
+{
+  "model": "Agreement_Approvals.agreement",
+  "pk": 3,
+  "fields": {
+    "agreement_id": "AGR002",
+    "agreement_type": "Guarantor Agreement",
+    "client_name": "Kaduru Srnidhi",
+    "amount": "360000.00",
+    "priority": "Medium",
+    "assigned_to": "Priya",
+    "status": "Approved",
+    "submitted_date": "2026-03-05"
+  }
+},
+{
+  "model": "Agreement_Approvals.agreement",
+  "pk": 4,
+  "fields": {
+    "agreement_id": "",
+    "agreement_type": "Loan Agreement",
+    "client_name": "lekha",
+    "amount": "500000.00",
+    "priority": "High",
+    "assigned_to": "Amit",
+    "status": "Pending",
+    "submitted_date": "2026-03-05"
+  }
+},
+{
+  "model": "Agreement_Approvals.agreement",
+  "pk": 5,
+  "fields": {
+    "agreement_id": "AGR-9977",
+    "agreement_type": "Collateral Agreement",
+    "client_name": "sri",
+    "amount": "600000.00",
+    "priority": "Medium",
+    "assigned_to": "Sneha Reddy",
+    "status": "Pending",
+    "submitted_date": "2026-03-05"
+  }
+},
+{
+  "model": "Agreement_Approvals.agreement",
+  "pk": 6,
+  "fields": {
+    "agreement_id": "AGR-9977",
+    "agreement_type": "Collateral Agreement",
+    "client_name": "sri",
+    "amount": "600000.00",
+    "priority": "Medium",
+    "assigned_to": "Priya",
+    "status": "Pending",
+    "submitted_date": "2026-03-05"
+  }
+},
+{
+  "model": "Agreement_Approvals.agreement",
+  "pk": 7,
+  "fields": {
+    "agreement_id": "AGR-2026",
+    "agreement_type": "Loan Agreement",
+    "client_name": "ABC Technologies Pvt Ltd",
+    "amount": "500000.00",
+    "priority": "Medium",
+    "assigned_to": "Sneha",
+    "status": "Pending",
+    "submitted_date": "2026-03-05"
+  }
+},
+{
+  "model": "Agreement_Approvals.bulkassign",
+  "pk": 1,
+  "fields": {
+    "assigned_to": "Priya",
+    "agreements": [
+      6
+    ]
+  }
+},
+{
+  "model": "Agreement_Approvals.bulkassign",
+  "pk": 2,
+  "fields": {
+    "assigned_to": "Sneha",
+    "agreements": [
+      7
+    ]
+  }
+}
+]

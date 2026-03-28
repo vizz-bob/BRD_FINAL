@@ -1,0 +1,28 @@
+{% extends "admin/change_list.html" %}
+{% load admin_urls static %}
+
+{% block content_title %}
+    <h1>Privacy Policy</h1>
+{% endblock %}
+
+{% block search %}
+    {% if has_filters %}
+        <div id="toolbar">
+            <form id="changelist-search" method="get">
+                <div>
+                    <label for="searchbar"><img src="{% static 'admin/img/search.svg' %}" alt="Search"></label>
+                    <input type="text" size="40" name="q" value="{{ cl.query }}" id="searchbar" autofocus placeholder="Search privacy policies...">
+                    <input type="submit" value="Search">
+                </div>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block submit_buttons_bottom %}
+    <div class="submit-row">
+        <a href="{% url 'admin:profiles_privacypolicy_viewwithsupport' %}" class="button default" style="background-color: #417690; color: white; margin-right: 10px;">
+            👁️ View Privacy Policy with Support
+        </a>
+    </div>
+{% endblock %}

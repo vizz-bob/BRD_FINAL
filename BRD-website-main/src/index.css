@@ -1,0 +1,17 @@
+/* index.css */
+@import "tailwindcss";
+
+/* Tailwind config or global CSS */
+:root {
+  --primary-color: #2563eb; /* Microsoft blue */
+  --text-color: #1f2937; /* Neutral dark */
+  --bg-light: #f3f4f6;
+  --font-sans: 'Segoe UI', 'Roboto', sans-serif;
+}
+
+@theme{
+
+--color-primary: var(--primary-color);
+--color-secondary: var(--text-color);
+--color-bg-light: var(--bg-light);
+}
