@@ -309,7 +309,7 @@ function MainLayout({ children }) {
 
 export default function App() {
     return (
-        <Router>
+        <Router basename="/tenant">
             <MainLayout>
                 <Routes>
                     {/* Default: go straight to dashboard */}

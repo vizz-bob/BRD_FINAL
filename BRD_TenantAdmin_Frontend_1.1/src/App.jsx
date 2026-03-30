@@ -353,7 +353,7 @@ function AppContent() {
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/tenant-admin">
       <AppContent />
     </Router>
   );
