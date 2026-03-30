@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getSitePhotos } from "../services/siteVisitService";
+import { getSitePhotos } from "../services/sitevisitService";
 
 const MEDIA_BASE = "http://127.0.0.1:8000";
 

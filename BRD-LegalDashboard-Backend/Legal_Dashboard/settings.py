@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-r!+-7d88+-1(i7i*yk8k6%2-2bqa$q%w=ls1wjv&wo7i^(c2n)'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-r!+-7d88+-1(i7i*yk8k6%2-2bqa$q%w=ls1wjv&wo7i^(c2n)')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 
 # Application definition
@@ -91,16 +92,15 @@ WSGI_APPLICATION = 'Legal_Dashboard.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'DB1',            # Your PostgreSQL database name
-        'USER': 'postgres',       # PostgreSQL username
-        'PASSWORD': 'srinidhi',   # Password you set during installation
-        'HOST': 'localhost',      # Usually localhost
-        'PORT': '5432',           # Default PostgreSQL port
+        'NAME': os.environ.get('DB_NAME', 'legal_db'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
+        'OPTIONS': {
+            'sslmode': os.environ.get('DB_SSLMODE', 'prefer'),
+        },
     },
-    'sqlite': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
 }
 
 
@@ -139,7 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-import os
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # URL to access media files
 MEDIA_URL = '/media/'
@@ -147,14 +147,8 @@ MEDIA_URL = '/media/'
 # Folder on disk to store uploaded files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:3000',
-    'http://127.0.0.1:5173',
-    'http://127.0.0.1:5174',
-    'http://127.0.0.1:3000',
-]
+_cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173')
+CORS_ALLOWED_ORIGINS = [o.strip() for o in _cors_origins.split(',')]
 
 CORS_ALLOW_CREDENTIALS = True
 

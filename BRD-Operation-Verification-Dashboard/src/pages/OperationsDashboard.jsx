@@ -13,7 +13,7 @@ import Sidebar from "../components/Common/Sidebar";
 import {
   getAllSiteVisits,
   getAllRejected,
-} from "../services/siteVisitService";
+} from "../services/sitevisitService";
 import {
   getDashboardSummary,
   getAllTasks,
