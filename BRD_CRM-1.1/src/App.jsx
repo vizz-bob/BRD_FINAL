@@ -21,7 +21,7 @@ function App() {
 
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/crm">
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
 

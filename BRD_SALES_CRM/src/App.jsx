@@ -90,7 +90,7 @@ function AppRoutes() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/sales">
       <AuthProvider>
         <AppRoutes />
       </AuthProvider>

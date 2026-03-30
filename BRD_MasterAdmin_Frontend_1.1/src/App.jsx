@@ -463,7 +463,7 @@ export default function App() {
   =============================== */
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/master-admin">
       <Routes>
         {/* ============ PUBLIC ============ */}
         <Route path="/login" element={<Login />} />
