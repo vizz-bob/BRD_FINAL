@@ -50,7 +50,7 @@ const router = createBrowserRouter([
       { path: 'valuation/property-checks', element: <PropertyChecks /> },
     ],
   },
-]);
+], {basename: "/valuation"});
 
 function App() {
   return (

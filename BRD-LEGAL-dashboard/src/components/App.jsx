@@ -53,7 +53,7 @@ const router = createBrowserRouter([
       { path: 'legal/agreements', element: <AgreementApprovals /> },
     ],
   },
-]);
+], {basename: "/legal"});
 
 function App() {
   return (
