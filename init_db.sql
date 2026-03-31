@@ -1,10 +1,11 @@
 -- =============================================================================
 -- BRD Loan CRM Platform — PostgreSQL Database & User Setup
--- Run as master user (postgres) on AWS RDS
+-- Run as master user (Stagging_Admin) on AWS RDS
 --
 -- Usage:
---   psql -h stagging-db.cxa6qyk0oyb9.ap-south-1.rds.amazonaws.com \
---        -U postgres -d postgres -f init_db.sql
+--   psql "host=stagging-db.cxa6qyk0oyb9.ap-south-1.rds.amazonaws.com \
+--        port=5432 dbname=postgres user=Stagging_Admin \
+--        sslmode=require password=Brd12345!" -f init_db.sql
 -- =============================================================================
 
 -- Step 1: Create the application database (skip if already exists)

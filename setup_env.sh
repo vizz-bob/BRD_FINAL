@@ -37,6 +37,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=5432
+DB_SSLMODE=require
 
 # Redis
 REDIS_URL=redis://loancrm_redis:6379/0
