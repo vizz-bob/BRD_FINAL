@@ -11,11 +11,14 @@ volumes:
 
 services:
 
+  # ── Infrastructure ────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
     container_name: loancrm_redis
     restart: unless-stopped
     command: redis-server --appendonly yes --maxmemory 256mb
+    ports:
+      - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
@@ -51,15 +54,28 @@ services:
       - salescrm-backend
       - tenantadmin-backend
       - valuation-backend
+      - website-frontend
+      - masteradmin-frontend
+      - tenant-frontend
+      - crm-frontend
+      - finance-frontend
+      - salescrm-frontend
+      - tenantadmin-frontend
+      - channel-frontend
+      - fraud-frontend
+      - legal-frontend
+      - operations-frontend
+      - valuation-frontend
 
+  # ── Backends (each on unique host port) ───────────────────────────────────
   masteradmin-backend:
     build:
       context: ./BRD_MasterAdmin_Backend_1.1
       dockerfile: Dockerfile
     container_name: loancrm_masteradmin_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8001:8000"
     env_file: ./BRD_MasterAdmin_Backend_1.1/.env
     volumes:
       - static_files:/app/static
@@ -76,8 +92,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_tenant_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8002:8000"
     env_file: ./BRD-MergedTenantMaster-Backend/.env
     volumes:
       - media_files:/app/media
@@ -93,8 +109,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_crm_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8003:8000"
     env_file: ./BRD_CRM_1.1_BACKEND/.env
     volumes:
       - media_files:/app/media
@@ -110,8 +126,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_finance_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8004:8000"
     env_file: ./BRD_FINANCE_DASHBOARD_Backend/.env
     networks:
       - loancrm_network
@@ -125,8 +141,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_agents_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8005:8000"
     env_file: ./BRD-AgentsApp-Backend/.env
     networks:
       - loancrm_network
@@ -140,8 +156,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_channel_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8006:8000"
     env_file: ./BRD-ChannelPartnerDashboard-Backend/.env
     networks:
       - loancrm_network
@@ -155,8 +171,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_fraud_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8007:8000"
     env_file: ./BRD-FraudTeam-Dashboard-Backend/.env
     networks:
       - loancrm_network
@@ -170,8 +186,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_legal_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8008:8000"
     env_file: ./BRD-LegalDashboard-Backend/.env
     networks:
       - loancrm_network
@@ -185,8 +201,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_operations_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8009:8000"
     env_file: ./BRD-OperationVerification-Backend/.env
     networks:
       - loancrm_network
@@ -200,8 +216,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_salescrm_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8010:8000"
     env_file: ./BRD-SalesCRM-Dashboard-Backend/.env
     networks:
       - loancrm_network
@@ -215,8 +231,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_tenantadmin_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8011:8000"
     env_file: ./BRD-TenantAdmin_backend_2.0/.env
     networks:
       - loancrm_network
@@ -230,8 +246,8 @@ services:
       dockerfile: Dockerfile
     container_name: loancrm_valuation_backend
     restart: unless-stopped
-    expose:
-      - "8000"
+    ports:
+      - "8012:8000"
     env_file: ./BRD-Valuation-Dashboard-Backend/.env
     networks:
       - loancrm_network
@@ -239,14 +255,17 @@ services:
       redis:
         condition: service_healthy
 
+  # ── Frontends (each on unique host port) ──────────────────────────────────
   website-frontend:
     build:
       context: ./BRD-website-main
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api
     container_name: loancrm_website_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3000:80"
     networks:
       - loancrm_network
 
@@ -254,10 +273,12 @@ services:
     build:
       context: ./BRD_MasterAdmin_Frontend_1.1
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/master-admin
     container_name: loancrm_masteradmin_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3001:80"
     networks:
       - loancrm_network
 
@@ -265,10 +286,12 @@ services:
     build:
       context: ./BRD-MergedTenantMaster-Frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/tenant
     container_name: loancrm_tenant_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3002:80"
     networks:
       - loancrm_network
 
@@ -276,10 +299,12 @@ services:
     build:
       context: ./BRD_CRM-1.1
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/crm
     container_name: loancrm_crm_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3003:80"
     networks:
       - loancrm_network
 
@@ -287,10 +312,12 @@ services:
     build:
       context: ./BRD_FINANCE_DASHBOARD
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/finance
     container_name: loancrm_finance_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3004:80"
     networks:
       - loancrm_network
 
@@ -298,10 +325,12 @@ services:
     build:
       context: ./BRD_SALES_CRM
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/sales-crm
     container_name: loancrm_salescrm_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3005:80"
     networks:
       - loancrm_network
 
@@ -309,10 +338,12 @@ services:
     build:
       context: ./BRD_TenantAdmin_Frontend_1.1
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/tenant-admin
     container_name: loancrm_tenantadmin_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3006:80"
     networks:
       - loancrm_network
 
@@ -320,10 +351,12 @@ services:
     build:
       context: ./BRD-ChannelPartner-Dashboard
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/channel
     container_name: loancrm_channel_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3007:80"
     networks:
       - loancrm_network
 
@@ -331,10 +364,12 @@ services:
     build:
       context: ./BRD-FraudTeamDashboard
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/fraud
     container_name: loancrm_fraud_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3008:80"
     networks:
       - loancrm_network
 
@@ -342,10 +377,12 @@ services:
     build:
       context: ./BRD-LEGAL-dashboard
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/legal
     container_name: loancrm_legal_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3009:80"
     networks:
       - loancrm_network
 
@@ -353,10 +390,12 @@ services:
     build:
       context: ./BRD-Operation-Verification-Dashboard
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/operations
     container_name: loancrm_operations_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3010:80"
     networks:
       - loancrm_network
 
@@ -364,9 +403,11 @@ services:
     build:
       context: ./BRD-ValuationDashboard
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://13.232.219.91/api/valuation
     container_name: loancrm_valuation_frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3011:80"
     networks:
       - loancrm_network

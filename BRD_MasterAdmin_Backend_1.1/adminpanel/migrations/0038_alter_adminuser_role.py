@@ -11,9 +11,23 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='adminuser',
-            name='role',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='admin_users', to='adminpanel.role'),
+        # FIX: adminuser.role_id was integer (FK to auth.group).
+        # Changing to adminpanel.role (UUID PK) requires DROP + ADD, not ALTER TYPE.
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "adminpanel_adminuser" DROP COLUMN IF EXISTS "role_id" CASCADE;
+                ALTER TABLE "adminpanel_adminuser"
+                    ADD COLUMN "role_id" uuid NULL
+                    REFERENCES "adminpanel_role"("id")
+                    DEFERRABLE INITIALLY DEFERRED;
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='adminuser',
+                    name='role',
+                    field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='admin_users', to='adminpanel.role'),
+                ),
+            ]
         ),
     ]

@@ -6,6 +6,8 @@ import {
     Navigate,
     useLocation,
 } from "react-router-dom";
+import Login from "./auth/Login";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 // Layout Components
 import Sidebar from "./layout/Sidebar";
@@ -310,8 +312,17 @@ function MainLayout({ children }) {
 export default function App() {
     return (
         <Router basename="/tenant">
-            <MainLayout>
-                <Routes>
+            <Routes>
+                {/* Public route — no layout, no auth required */}
+                <Route path="/login" element={<Login />} />
+
+                {/* All other routes require login and show the main layout */}
+                <Route
+                    path="/*"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <Routes>
                     {/* Default: go straight to dashboard */}
                     <Route path="/" element={<Navigate to="/dashboard" />} />
 
@@ -609,8 +620,12 @@ export default function App() {
                     <Route path="/rule-management/verification/agency/view/:id" element={<ViewAgencyVerificationRule />} />
 
                     <Route path="*" element={<Navigate to="/dashboard" />} />
-                </Routes>
-            </MainLayout>
+                                </Routes>
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
         </Router>
     );
 }

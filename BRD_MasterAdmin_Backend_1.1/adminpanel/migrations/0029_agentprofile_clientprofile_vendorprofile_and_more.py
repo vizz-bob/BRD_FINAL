@@ -257,55 +257,125 @@ class Migration(migrations.Migration):
             model_name='agenttype',
             name='status',
         ),
-        migrations.AlterField(
-            model_name='agentcategory',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        # FIX: PostgreSQL cannot cast uuid to bigint directly. Drop and recreate.
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "adminpanel_agentcategory" DROP COLUMN "id" CASCADE;
+                ALTER TABLE "adminpanel_agentcategory" ADD COLUMN "id" bigserial PRIMARY KEY;
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='agentcategory',
+                    name='id',
+                    field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+                ),
+            ]
         ),
         migrations.AlterField(
             model_name='agentcategory',
             name='name',
             field=models.CharField(max_length=50),
         ),
-        migrations.AlterField(
-            model_name='agentconstitution',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        # FIX: PostgreSQL cannot cast uuid to bigint directly. Drop and recreate.
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "adminpanel_agentconstitution" DROP COLUMN "id" CASCADE;
+                ALTER TABLE "adminpanel_agentconstitution" ADD COLUMN "id" bigserial PRIMARY KEY;
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='agentconstitution',
+                    name='id',
+                    field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+                ),
+            ]
         ),
         migrations.AlterField(
             model_name='agentconstitution',
             name='name',
             field=models.CharField(max_length=50),
         ),
-        migrations.AlterField(
-            model_name='agentlevel',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        # FIX: PostgreSQL cannot cast uuid to bigint directly. Drop and recreate.
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "adminpanel_agentlevel" DROP COLUMN "id" CASCADE;
+                ALTER TABLE "adminpanel_agentlevel" ADD COLUMN "id" bigserial PRIMARY KEY;
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='agentlevel',
+                    name='id',
+                    field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+                ),
+            ]
         ),
         migrations.AlterField(
             model_name='agentlevel',
             name='name',
             field=models.CharField(max_length=50),
         ),
-        migrations.AlterField(
-            model_name='agentlocation',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        # FIX: PostgreSQL cannot cast uuid to bigint directly. Drop and recreate.
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "adminpanel_agentlocation" DROP COLUMN "id" CASCADE;
+                ALTER TABLE "adminpanel_agentlocation" ADD COLUMN "id" bigserial PRIMARY KEY;
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='agentlocation',
+                    name='id',
+                    field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+                ),
+            ]
         ),
-        migrations.AlterField(
-            model_name='agentresponsibility',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        # FIX: PostgreSQL cannot cast uuid to bigint directly. Drop and recreate.
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "adminpanel_agentresponsibility" DROP COLUMN "id" CASCADE;
+                ALTER TABLE "adminpanel_agentresponsibility" ADD COLUMN "id" bigserial PRIMARY KEY;
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='agentresponsibility',
+                    name='id',
+                    field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+                ),
+            ]
         ),
-        migrations.AlterField(
-            model_name='agentservicetype',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        # FIX: PostgreSQL cannot cast uuid to bigint directly. Drop and recreate.
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "adminpanel_agentservicetype" DROP COLUMN "id" CASCADE;
+                ALTER TABLE "adminpanel_agentservicetype" ADD COLUMN "id" bigserial PRIMARY KEY;
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='agentservicetype',
+                    name='id',
+                    field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+                ),
+            ]
         ),
-        migrations.AlterField(
-            model_name='agenttype',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        # FIX: PostgreSQL cannot cast uuid to bigint directly. Drop and recreate.
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "adminpanel_agenttype" DROP COLUMN "id" CASCADE;
+                ALTER TABLE "adminpanel_agenttype" ADD COLUMN "id" bigserial PRIMARY KEY;
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='agenttype',
+                    name='id',
+                    field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+                ),
+            ]
         ),
         migrations.AlterField(
             model_name='agenttype',

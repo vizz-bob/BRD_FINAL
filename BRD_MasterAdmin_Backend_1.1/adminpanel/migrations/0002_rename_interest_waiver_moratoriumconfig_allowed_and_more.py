@@ -100,10 +100,24 @@ class Migration(migrations.Migration):
             name='penalty_rate',
             field=models.DecimalField(decimal_places=2, max_digits=5),
         ),
-        migrations.AlterField(
-            model_name='productfacility',
-            name='id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+        # FIX: PostgreSQL cannot directly cast bigint to uuid.
+        # Drop the bigint id column and recreate it as uuid.
+        # The table was newly created in 0001_initial with no FK references yet,
+        # so this is safe on a fresh deployment.
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "adminpanel_productfacility" DROP COLUMN "id" CASCADE;
+                ALTER TABLE "adminpanel_productfacility"
+                    ADD COLUMN "id" uuid NOT NULL PRIMARY KEY DEFAULT gen_random_uuid();
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='productfacility',
+                    name='id',
+                    field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+                ),
+            ]
         ),
         migrations.AlterField(
             model_name='productmix',

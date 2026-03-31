@@ -14,9 +14,18 @@ class Migration(migrations.Migration):
             model_name='tenantuser',
             name='tenant_id',
         ),
-        migrations.AlterField(
-            model_name='tenantuser',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "tenantuser_tenantuser" DROP COLUMN "id" CASCADE;
+                ALTER TABLE "tenantuser_tenantuser" ADD COLUMN "id" bigserial PRIMARY KEY;
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='tenantuser',
+                    name='id',
+                    field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+                ),
+            ]
         ),
     ]

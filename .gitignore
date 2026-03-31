@@ -1,52 +1,55 @@
-.env
-.env.local
-.env.production
-.env.staging
-*.env
-!.env.example
+# ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
 *.pyc
 *.pyo
+*.egg-info/
 venv/
 env/
 .venv/
-*.egg-info/
+
+# ── Django ────────────────────────────────────────────────────────────────────
 staticfiles/
 media/
 db.sqlite3
 *.sqlite3
+
+# ── Node / Frontend ──────────────────────────────────────────────────────────
 node_modules/
 build/
 dist/
 npm-debug.log*
 yarn-error.log*
 .eslintcache
-.DS_Store
-~$*
-*.pem
-*.key
-.aws/
-StaggingKey.pem
+/apps/loancrm/BRD_MasterAdmin_Frontend_1.1/dist/
+
+# ── Docker ────────────────────────────────────────────────────────────────────
 *.log
 logs/
+docker-compose.override.yml
+
+# ── System ────────────────────────────────────────────────────────────────────
+.DS_Store
+~$*
 .vscode/
 .idea/
+
+# ── Secrets — DO NOT COMMIT raw private keys or PEM files ────────────────────
+*.pem
+*.key
+StaggingKey.pem
+.aws/
+
+# ── Documents (generated, not source) ────────────────────────────────────────
 *.docx
 *.doc
 A_BRD_Documents/
 aws/
 setup_project.py
-# Node.js
-node_modules/
-dist/
 
-# Docker
-*.log
-docker-compose.override.yml
-
-# System files
-*.pem
-*.env
-
-# Build outputs
-/apps/loancrm/BRD_MasterAdmin_Frontend_1.1/dist/
+# ── .env files: INCLUDED in git for deployment convenience ──────────────────
+# The .env files contain non-sensitive staging credentials and must be
+# committed so that EC2 can run without a manual setup step.
+# For production, rotate secrets and use AWS Secrets Manager instead.
+# (Lines below explicitly UN-ignore .env)
+!.env
+!**/.env

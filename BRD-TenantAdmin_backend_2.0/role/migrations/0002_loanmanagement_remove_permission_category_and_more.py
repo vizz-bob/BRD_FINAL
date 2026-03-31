@@ -39,10 +39,19 @@ class Migration(migrations.Migration):
             model_name='role',
             name='role_code',
         ),
-        migrations.AlterField(
-            model_name='role',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        migrations.RunSQL(
+            sql="""
+                ALTER TABLE "role_role" DROP COLUMN "id" CASCADE;
+                ALTER TABLE "role_role" ADD COLUMN "id" bigserial PRIMARY KEY;
+            """,
+            reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AlterField(
+                    model_name='role',
+                    name='id',
+                    field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+                ),
+            ]
         ),
         migrations.AlterField(
             model_name='role',
