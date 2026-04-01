@@ -53,3 +53,11 @@ setup_project.py
 # (Lines below explicitly UN-ignore .env)
 !.env
 !**/.env
+
+# ── .env.local files: LOCAL DEV ONLY — never push to git ────────────────────
+# These override .env for localhost development (DB_HOST=localhost, etc.)
+.env.local
+**/.env.local
+
+# ── Local dev scripts ─────────────────────────────────────────────────────────
+.local-logs/
