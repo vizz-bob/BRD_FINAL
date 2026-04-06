@@ -1,0 +1,1091 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRD LoanCRM - Complete AWS Deployment Guide</title>
+    <style>
+        @page {
+            margin: 1in;
+            size: A4;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            background: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            page-break-before: always;
+            margin-top: 40px;
+        }
+        
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        
+        h3 {
+            color: #7f8c8d;
+            margin-top: 25px;
+        }
+        
+        h4 {
+            color: #95a5a6;
+            margin-top: 20px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 5px;
+        }
+        
+        code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            border: 1px solid #e9ecef;
+        }
+        
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #e9ecef;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            border: none;
+            font-size: 0.9em;
+        }
+        
+        blockquote {
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .checklist li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .checklist li:before {
+            content: '☐';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .checklist li.completed:before {
+            content: '☑';
+            color: #27ae60;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            page-break-after: always;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            border: none;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .warning {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        @media print {
+            body {
+                font-size: 12pt;
+            }
+            
+            h1 {
+                page-break-before: always;
+                margin-top: 20px;
+            }
+            
+            pre, table {
+                page-break-inside: avoid;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>BRD LoanCRM</h1>
+            <p><strong>Complete AWS Deployment Guide</strong></p>
+            <p>Version 1.0 | Last Updated: April 2026</p>
+        </div>
+        
+        <h1 id="brd-loancrm-complete-aws-deployment-guide">BRD LoanCRM - Complete AWS Deployment Guide</h1>
+<p><strong>Version: 1.0</strong><br />
+<strong>Last Updated: April 2026</strong><br />
+<strong>Project: Microservices-based Loan CRM System</strong></p>
+<hr />
+<h2 id="table-of-contents">📋 Table of Contents</h2>
+<ol>
+<li><a href="#project-overview">Project Overview</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#architecture-overview">Architecture Overview</a></li>
+<li><a href="#environment-setup">Environment Setup</a></li>
+<li><a href="#infrastructure-deployment">Infrastructure Deployment</a></li>
+<li><a href="#application-deployment">Application Deployment</a></li>
+<li><a href="#database-setup">Database Setup</a></li>
+<li><a href="#monitoring-setup">Monitoring Setup</a></li>
+<li><a href="#cicd-pipeline">CI/CD Pipeline</a></li>
+<li><a href="#management-commands">Management Commands</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#all-required-files">All Required Files</a></li>
+</ol>
+<hr />
+<h2 id="project-overview">🎯 Project Overview</h2>
+<h3 id="system-components"><strong>System Components</strong></h3>
+<ul>
+<li><strong>24 Microservices</strong>: 12 Django backends + 12 React frontends</li>
+<li><strong>Backend Services</strong>: MasterAdmin, Tenant, CRM, Finance, Agents, Channel, Fraud, Legal, Operations, SalesCRM, TenantAdmin, Valuation</li>
+<li><strong>Frontend Applications</strong>: Corresponding React/Vue applications for each backend</li>
+<li><strong>Infrastructure</strong>: AWS EKS, RDS PostgreSQL, ElastiCache Redis, S3, Application Load Balancer</li>
+</ul>
+<h3 id="technology-stack"><strong>Technology Stack</strong></h3>
+<ul>
+<li><strong>Backend</strong>: Django 4.x, Python 3.11, PostgreSQL 15</li>
+<li><strong>Frontend</strong>: React/Vue.js, Node.js 18</li>
+<li><strong>Containerization</strong>: Docker, Kubernetes</li>
+<li><strong>Cloud</strong>: AWS (EKS, RDS, ElastiCache, S3, ALB)</li>
+<li><strong>Monitoring</strong>: Prometheus, Grafana, CloudWatch</li>
+<li><strong>CI/CD</strong>: GitHub Actions</li>
+</ul>
+<hr />
+<h2 id="prerequisites">📋 Prerequisites</h2>
+<h3 id="required-tools"><strong>Required Tools</strong></h3>
+<pre><code class="language-bash"># AWS CLI
+curl &quot;https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip&quot; -o &quot;awscliv2.zip&quot;
+unzip awscliv2.zip
+sudo ./aws/install
+
+# kubectl
+curl -LO &quot;https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl&quot;
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+
+# Terraform (optional but recommended)
+wget https://releases.hashicorp.com/terraform/1.5.0/terraform_1.5.0_linux_amd64.zip
+unzip terraform_1.5.0_linux_amd64.zip
+sudo mv terraform /usr/local/bin/
+
+# Git (should be installed)
+sudo apt-get update
+sudo apt-get install git -y
+</code></pre>
+<h3 id="aws-requirements"><strong>AWS Requirements</strong></h3>
+<ul>
+<li>AWS account with appropriate permissions</li>
+<li>IAM user with:</li>
+<li>EKS full access</li>
+<li>RDS full access</li>
+<li>EC2 full access</li>
+<li>S3 full access</li>
+<li>ECR full access</li>
+<li>ElastiCache full access</li>
+<li>IAM full access</li>
+<li>CloudWatch full access</li>
+</ul>
+<hr />
+<h2 id="architecture-overview">🏗️ Architecture Overview</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                        AWS Cloud                           │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐    ┌─────────────────────────────────┐ │
+│  │   Route53       │    │        CloudWatch              │ │
+│  │   (DNS)         │    │     (Monitoring)               │ │
+│  └─────────────────┘    └─────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐    ┌─────────────────────────────────┐ │
+│  │   ALB/ELB       │    │        EKS Cluster             │ │
+│  │  (Load Balancer)│    │   (Kubernetes)                 │ │
+│  └─────────────────┘    └─────────────────────────────────┘ │
+│                                  │                         │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │                    EKS Pods                             │ │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐  │ │
+│  │  │   Nginx      │ │   Redis     │ │   Backends       │  │ │
+│  │  │ (Frontend)   │ │  (Cache)    │ │ (12 Services)    │  │ │
+│  │  └─────────────┘ └─────────────┘ └─────────────────┘  │ │
+│  │  ┌─────────────────────────────────────────────────────┐  │ │
+│  │  │              Frontends                              │  │ │
+│  │  │            (12 Applications)                        │  │ │
+│  │  └─────────────────────────────────────────────────────┘  │ │
+│  └─────────────────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐    ┌─────────────────────────────────┐ │
+│  │     RDS         │    │         ElastiCache              │ │
+│  │  (PostgreSQL)   │    │         (Redis)                  │ │
+│  │  (12 Databases) │    │                                 │ │
+│  └─────────────────┘    └─────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │                  S3 Storage                            │ │
+│  │              (Media Files)                             │ │
+│  └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="environment-setup">🔧 Environment Setup</h2>
+<h3 id="1-configure-aws-credentials"><strong>1. Configure AWS Credentials</strong></h3>
+<pre><code class="language-bash"># Method 1: AWS CLI configure
+aws configure
+# Enter your AWS Access Key ID
+# Enter your AWS Secret Access Key
+# Enter default region: ap-south-1
+# Enter default output format: json
+
+# Method 2: Environment variables
+export AWS_ACCESS_KEY_ID=&quot;your-access-key-id&quot;
+export AWS_SECRET_ACCESS_KEY=&quot;your-secret-access-key&quot;
+export AWS_DEFAULT_REGION=&quot;ap-south-1&quot;
+
+# Verify configuration
+aws sts get-caller-identity
+</code></pre>
+<h3 id="2-clone-repository"><strong>2. Clone Repository</strong></h3>
+<pre><code class="language-bash"># Clone the repository
+git clone https://github.com/yourusername/brd-loancrm.git
+cd brd-loancrm
+
+# Or if deploying from local files
+cp -r /path/to/BRD_FINAL /opt/brd-loancrm
+cd /opt/brd-loancrm
+</code></pre>
+<h3 id="3-set-environment-variables"><strong>3. Set Environment Variables</strong></h3>
+<p>Create <code>.env</code> file:</p>
+<pre><code class="language-bash"># Database Configuration
+DB_HOST=your-rds-endpoint.ap-south-1.rds.amazonaws.com
+DB_PORT=5432
+DB_MASTER_USER=loancrm_admin
+DB_MASTER_PASSWORD=YourStrongPassword123!
+
+# Individual Database Configurations
+WEBSITE_DB_NAME=website_db
+WEBSITE_DB_USER=website_user
+WEBSITE_DB_PASSWORD=WebsitePass123!
+
+MASTERADMIN_DB_NAME=masteradmin_db
+MASTERADMIN_DB_USER=masteradmin_user
+MASTERADMIN_DB_PASSWORD=MasterAdminPass123!
+
+TENANT_DB_NAME=tenant_db
+TENANT_DB_USER=tenant_user
+TENANT_DB_PASSWORD=TenantPass123!
+
+CRM_DB_NAME=crm_db
+CRM_DB_USER=crm_user
+CRM_DB_PASSWORD=CrmPass123!
+
+FINANCE_DB_NAME=finance_db
+FINANCE_DB_USER=finance_user
+FINANCE_DB_PASSWORD=FinancePass123!
+
+AGENTS_DB_NAME=agents_db
+AGENTS_DB_USER=agents_user
+AGENTS_DB_PASSWORD=AgentsPass123!
+
+CHANNEL_DB_NAME=channel_db
+CHANNEL_DB_USER=channel_user
+CHANNEL_DB_PASSWORD=ChannelPass123!
+
+FRAUD_DB_NAME=fraud_db
+FRAUD_DB_USER=fraud_user
+FRAUD_DB_PASSWORD=FraudPass123!
+
+LEGAL_DB_NAME=legal_db
+LEGAL_DB_USER=legal_user
+LEGAL_DB_PASSWORD=LegalPass123!
+
+OPERATIONS_DB_NAME=operations_db
+OPERATIONS_DB_USER=operations_user
+OPERATIONS_DB_PASSWORD=OperationsPass123!
+
+SALESCRM_DB_NAME=salescrm_db
+SALESCRM_DB_USER=salescrm_user
+SALESCRM_DB_PASSWORD=SalesCrmPass123!
+
+TENANTADMIN_DB_NAME=tenantadmin_db
+TENANTADMIN_DB_USER=tenantadmin_user
+TENANTADMIN_DB_PASSWORD=TenantAdminPass123!
+
+VALUATION_DB_NAME=valuation_db
+VALUATION_DB_USER=valuation_user
+VALUATION_DB_PASSWORD=ValuationPass123!
+
+# Django Configuration
+DJANGO_SECRET_KEY=your-50-character-random-secret-key-change-this-now
+DEBUG=False
+ALLOWED_HOSTS=yourdomain.com,localhost,127.0.0.1
+
+# AWS Configuration
+AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+AWS_S3_BUCKET=brd-loancrm-media-production
+AWS_REGION=ap-south-1
+
+# Redis Configuration
+REDIS_URL=redis://brd-loancrm-redis:6379/0
+CELERY_BROKER_URL=redis://brd-loancrm-redis:6379/1
+
+# Email Configuration
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=your@gmail.com
+EMAIL_HOST_PASSWORD=your-app-password
+EMAIL_USE_TLS=True
+
+# JWT Configuration
+JWT_SECRET_KEY=your-jwt-secret-minimum-32-characters-long
+</code></pre>
+<hr />
+<h2 id="infrastructure-deployment">🏗️ Infrastructure Deployment</h2>
+<h3 id="option-1-using-terraform-recommended"><strong>Option 1: Using Terraform (Recommended)</strong></h3>
+<pre><code class="language-bash">cd aws-deployment/terraform
+
+# Copy and edit configuration
+cp terraform.tfvars.example terraform.tfvars
+
+# Edit terraform.tfvars
+nano terraform.tfvars
+</code></pre>
+<p><strong>Update these values:</strong></p>
+<pre><code class="language-hcl">aws_region = &quot;ap-south-1&quot;
+environment = &quot;production&quot;
+project_name = &quot;BRD-LoanCRM&quot;
+
+# Networking
+vpc_cidr = &quot;10.0.0.0/16&quot;
+azs = [&quot;ap-south-1a&quot;, &quot;ap-south-1b&quot;]
+public_subnets = [&quot;10.0.1.0/24&quot;, &quot;10.0.2.0/24&quot;]
+private_subnets = [&quot;10.0.11.0/24&quot;, &quot;10.0.12.0/24&quot;]
+
+# EKS Cluster
+cluster_name = &quot;brd-loancrm-cluster&quot;
+cluster_version = &quot;1.28&quot;
+instance_types = [&quot;t3.medium&quot;, &quot;t3.large&quot;]
+min_nodes = 2
+max_nodes = 5
+desired_nodes = 3
+
+# RDS Database
+db_instance_class = &quot;db.t3.medium&quot;
+db_allocated_storage = 100
+db_max_allocated_storage = 1000
+db_username = &quot;loancrm_admin&quot;
+db_password = &quot;YourStrongPassword123!&quot;
+
+# Redis
+redis_node_type = &quot;cache.t3.micro&quot;
+
+# S3
+s3_bucket_name = &quot;brd-loancrm-media-production&quot;
+
+# Domain
+domain_name = &quot;yourdomain.com&quot;
+certificate_arn = &quot;&quot;  # Leave empty if no SSL cert yet
+</code></pre>
+<pre><code class="language-bash"># Initialize and apply
+terraform init
+terraform plan
+terraform apply
+
+# Wait for infrastructure to be created (5-10 minutes)
+</code></pre>
+<h3 id="option-2-manual-infrastructure-setup"><strong>Option 2: Manual Infrastructure Setup</strong></h3>
+<p>Follow the detailed steps in <code>aws-deployment/01-infrastructure-setup.md</code></p>
+<hr />
+<h2 id="application-deployment">🚀 Application Deployment</h2>
+<h3 id="1-setup-eks-cluster-connection"><strong>1. Setup EKS Cluster Connection</strong></h3>
+<pre><code class="language-bash"># Update kubeconfig
+aws eks update-kubeconfig --name brd-loancrm-cluster --region ap-south-1
+
+# Verify connection
+kubectl cluster-info
+</code></pre>
+<h3 id="2-build-and-push-docker-images"><strong>2. Build and Push Docker Images</strong></h3>
+<pre><code class="language-bash"># Make build script executable
+chmod +x aws-deployment/docker/build-and-push.sh
+
+# Build and push all images
+./aws-deployment/docker/build-and-push.sh
+
+# Update Kubernetes manifests with ECR images
+chmod +x aws-deployment/docker/update-k8s-images.sh
+./aws-deployment/docker/update-k8s-images.sh
+</code></pre>
+<h3 id="3-deploy-core-services"><strong>3. Deploy Core Services</strong></h3>
+<pre><code class="language-bash"># Apply namespace
+kubectl apply -f aws-deployment/k8s/namespace.yaml
+
+# Apply configurations
+kubectl apply -f aws-deployment/k8s/configmaps.yaml
+
+# Apply secrets (update with your values first)
+kubectl apply -f aws-deployment/k8s/secrets.yaml
+
+# Apply persistent volumes
+kubectl apply -f aws-deployment/k8s/pvcs.yaml
+
+# Deploy Redis
+kubectl apply -f aws-deployment/k8s/redis.yaml
+
+# Deploy Nginx
+kubectl apply -f aws-deployment/k8s/nginx.yaml
+</code></pre>
+<h3 id="4-deploy-backend-services"><strong>4. Deploy Backend Services</strong></h3>
+<pre><code class="language-bash"># Deploy all backends
+chmod +x aws-deployment/k8s/deploy-all-backends.sh
+./aws-deployment/k8s/deploy-all-backends.sh
+
+# Wait for pods to be ready
+kubectl wait --for=condition=available --timeout=600s deployment --all -n brd-loancrm
+</code></pre>
+<h3 id="5-deploy-frontend-applications"><strong>5. Deploy Frontend Applications</strong></h3>
+<pre><code class="language-bash"># Deploy all frontends
+kubectl apply -f aws-deployment/k8s/frontends/
+
+# Wait for frontend pods
+kubectl wait --for=condition=available --timeout=300s deployment --all -n brd-loancrm
+</code></pre>
+<h3 id="6-deploy-monitoring"><strong>6. Deploy Monitoring</strong></h3>
+<pre><code class="language-bash"># Deploy Prometheus
+kubectl apply -f aws-deployment/monitoring/prometheus.yaml
+
+# Deploy Grafana
+kubectl apply -f aws-deployment/monitoring/grafana.yaml
+
+# Wait for monitoring pods
+kubectl wait --for=condition=available --timeout=300s deployment --all -n monitoring
+</code></pre>
+<h3 id="7-setup-load-balancer"><strong>7. Setup Load Balancer</strong></h3>
+<pre><code class="language-bash"># Apply ingress (update with your domain first)
+kubectl apply -f aws-deployment/k8s/ingress.yaml
+
+# Get Load Balancer URL
+kubectl get ingress -n brd-loancrm
+</code></pre>
+<hr />
+<h2 id="database-setup">🗄️ Database Setup</h2>
+<h3 id="1-create-databases"><strong>1. Create Databases</strong></h3>
+<pre><code class="language-bash"># Get RDS endpoint
+aws rds describe-db-instances --db-instance-identifier brd-loancrm-db
+
+# Connect to RDS
+psql -h your-rds-endpoint.ap-south-1.rds.amazonaws.com -U loancrm_admin -d postgres
+
+# Create databases
+CREATE DATABASE website_db;
+CREATE DATABASE masteradmin_db;
+CREATE DATABASE tenant_db;
+CREATE DATABASE crm_db;
+CREATE DATABASE finance_db;
+CREATE DATABASE agents_db;
+CREATE DATABASE channel_db;
+CREATE DATABASE fraud_db;
+CREATE DATABASE legal_db;
+CREATE DATABASE operations_db;
+CREATE DATABASE salescrm_db;
+CREATE DATABASE tenantadmin_db;
+CREATE DATABASE valuation_db;
+
+# Create users
+CREATE USER website_user WITH PASSWORD 'WebsitePass123!';
+CREATE USER masteradmin_user WITH PASSWORD 'MasterAdminPass123!';
+CREATE USER tenant_user WITH PASSWORD 'TenantPass123!';
+CREATE USER crm_user WITH PASSWORD 'CrmPass123!';
+CREATE USER finance_user WITH PASSWORD 'FinancePass123!';
+CREATE USER agents_user WITH PASSWORD 'AgentsPass123!';
+CREATE USER channel_user WITH PASSWORD 'ChannelPass123!';
+CREATE USER fraud_user WITH PASSWORD 'FraudPass123!';
+CREATE USER legal_user WITH PASSWORD 'LegalPass123!';
+CREATE USER operations_user WITH PASSWORD 'OperationsPass123!';
+CREATE USER salescrm_user WITH PASSWORD 'SalesCrmPass123!';
+CREATE USER tenantadmin_user WITH PASSWORD 'TenantAdminPass123!';
+CREATE USER valuation_user WITH PASSWORD 'ValuationPass123!';
+
+# Grant privileges
+GRANT ALL PRIVILEGES ON DATABASE website_db TO website_user;
+GRANT ALL PRIVILEGES ON DATABASE masteradmin_db TO masteradmin_user;
+GRANT ALL PRIVILEGES ON DATABASE tenant_db TO tenant_user;
+GRANT ALL PRIVILEGES ON DATABASE crm_db TO crm_user;
+GRANT ALL PRIVILEGES ON DATABASE finance_db TO finance_user;
+GRANT ALL PRIVILEGES ON DATABASE agents_db TO agents_user;
+GRANT ALL PRIVILEGES ON DATABASE channel_db TO channel_user;
+GRANT ALL PRIVILEGES ON DATABASE fraud_db TO fraud_user;
+GRANT ALL PRIVILEGES ON DATABASE legal_db TO legal_user;
+GRANT ALL PRIVILEGES ON DATABASE operations_db TO operations_user;
+GRANT ALL PRIVILEGES ON DATABASE salescrm_db TO salescrm_user;
+GRANT ALL PRIVILEGES ON DATABASE tenantadmin_db TO tenantadmin_user;
+GRANT ALL PRIVILEGES ON DATABASE valuation_db TO valuation_user;
+</code></pre>
+<h3 id="2-run-database-migrations"><strong>2. Run Database Migrations</strong></h3>
+<pre><code class="language-bash"># Wait for backend pods to be ready
+kubectl wait --for=condition=ready pod -l app=masteradmin-backend -n brd-loancrm --timeout=300s
+
+# Run migrations for each backend
+kubectl exec -n brd-loancrm deployment/masteradmin-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/tenant-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/crm-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/finance-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/agents-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/channel-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/fraud-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/legal-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/operations-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/salescrm-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/tenantadmin-backend -- python manage.py migrate
+kubectl exec -n brd-loancrm deployment/valuation-backend -- python manage.py migrate
+</code></pre>
+<h3 id="3-create-superuser"><strong>3. Create Superuser</strong></h3>
+<pre><code class="language-bash"># Create Django superuser for MasterAdmin
+kubectl exec -n brd-loancrm deployment/masteradmin-backend -- python manage.py createsuperuser
+</code></pre>
+<h3 id="4-collect-static-files"><strong>4. Collect Static Files</strong></h3>
+<pre><code class="language-bash"># Collect static files for each backend
+kubectl exec -n brd-loancrm deployment/masteradmin-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/tenant-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/crm-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/finance-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/agents-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/channel-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/fraud-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/legal-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/operations-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/salescrm-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/tenantadmin-backend -- python manage.py collectstatic --noinput
+kubectl exec -n brd-loancrm deployment/valuation-backend -- python manage.py collectstatic --noinput
+</code></pre>
+<hr />
+<h2 id="monitoring-setup">📊 Monitoring Setup</h2>
+<h3 id="1-access-grafana-dashboard"><strong>1. Access Grafana Dashboard</strong></h3>
+<pre><code class="language-bash"># Port forward Grafana
+kubectl port-forward -n monitoring svc/grafana 3000:3000
+
+# Open http://localhost:3000
+# Username: admin
+# Password: admin123
+</code></pre>
+<h3 id="2-access-prometheus"><strong>2. Access Prometheus</strong></h3>
+<pre><code class="language-bash"># Port forward Prometheus
+kubectl port-forward -n monitoring svc/prometheus 9090:9090
+
+# Open http://localhost:9090
+</code></pre>
+<h3 id="3-configure-grafana-dashboards"><strong>3. Configure Grafana Dashboards</strong></h3>
+<ol>
+<li>Login to Grafana (admin/admin123)</li>
+<li>Add Prometheus data source</li>
+<li>Import pre-configured dashboards</li>
+<li>Set up alerts and notifications</li>
+</ol>
+<hr />
+<h2 id="cicd-pipeline">🔄 CI/CD Pipeline</h2>
+<h3 id="1-github-actions-setup"><strong>1. GitHub Actions Setup</strong></h3>
+<h4 id="required-github-secrets"><strong>Required GitHub Secrets:</strong></h4>
+<pre><code>AWS_ACCESS_KEY_ID=your-access-key-id
+AWS_SECRET_ACCESS_KEY=your-secret-access-key
+AWS_ACCOUNT_ID=your-12-digit-account-id
+</code></pre>
+<h4 id="workflow-file-location"><strong>Workflow File Location:</strong></h4>
+<p><code>.github/workflows/aws-deploy.yml</code></p>
+<h4 id="workflow-triggers"><strong>Workflow Triggers:</strong></h4>
+<ul>
+<li>Push to main branch → Full deployment</li>
+<li>Pull request → Build and test only</li>
+</ul>
+<h3 id="2-manual-deployment-script"><strong>2. Manual Deployment Script</strong></h3>
+<pre><code class="language-bash"># Use the comprehensive deployment script
+chmod +x aws-deployment/scripts/deploy.sh
+./aws-deployment/scripts/deploy.sh infra
+</code></pre>
+<h3 id="3-update-application"><strong>3. Update Application</strong></h3>
+<pre><code class="language-bash"># Make changes to code
+git add .
+git commit -m &quot;Update application&quot;
+git push origin main
+
+# GitHub Actions will automatically deploy
+</code></pre>
+<hr />
+<h2 id="management-commands">🔧 Management Commands</h2>
+<h3 id="check-deployment-status"><strong>Check Deployment Status</strong></h3>
+<pre><code class="language-bash"># Check all pods
+kubectl get pods -n brd-loancrm
+
+# Check services
+kubectl get services -n brd-loancrm
+
+# Check ingress
+kubectl get ingress -n brd-loancrm
+
+# Check persistent volumes
+kubectl get pvc -n brd-loancrm
+</code></pre>
+<h3 id="scale-services"><strong>Scale Services</strong></h3>
+<pre><code class="language-bash"># Scale specific service
+kubectl scale deployment/masteradmin-backend --replicas=3 -n brd-loancrm
+
+# Scale all backends
+kubectl scale deployment --all --replicas=2 -n brd-loancrm
+</code></pre>
+<h3 id="view-logs"><strong>View Logs</strong></h3>
+<pre><code class="language-bash"># View specific service logs
+kubectl logs -f deployment/masteradmin-backend -n brd-loancrm
+
+# View all logs
+kubectl logs -f --all-containers=true -n brd-loancrm
+
+# View previous logs
+kubectl logs -p deployment/masteradmin-backend -n brd-loancrm
+</code></pre>
+<h3 id="access-pods"><strong>Access Pods</strong></h3>
+<pre><code class="language-bash"># Access pod shell
+kubectl exec -it &lt;pod-name&gt; -n brd-loancrm -- /bin/bash
+
+# Example
+kubectl exec -it deployment/masteradmin-backend -n brd-loancrm -- /bin/bash
+</code></pre>
+<h3 id="update-deployment"><strong>Update Deployment</strong></h3>
+<pre><code class="language-bash"># Build and push new images
+./aws-deployment/docker/build-and-push.sh
+
+# Update specific deployment
+kubectl rollout restart deployment/masteradmin-backend -n brd-loancrm
+
+# Update all deployments
+kubectl rollout restart deployment --all -n brd-loancrm
+</code></pre>
+<h3 id="rollback-deployment"><strong>Rollback Deployment</strong></h3>
+<pre><code class="language-bash"># Rollback to previous revision
+kubectl rollout undo deployment/masteradmin-backend -n brd-loancrm
+
+# Check rollout status
+kubectl rollout status deployment/masteradmin-backend -n brd-loancrm
+
+# View rollout history
+kubectl rollout history deployment/masteradmin-backend -n brd-loancrm
+</code></pre>
+<hr />
+<h2 id="troubleshooting">🚨 Troubleshooting</h2>
+<h3 id="common-issues-and-solutions"><strong>Common Issues and Solutions</strong></h3>
+<h4 id="1-pod-not-starting"><strong>1. Pod Not Starting</strong></h4>
+<pre><code class="language-bash"># Check pod status
+kubectl describe pod &lt;pod-name&gt; -n brd-loancrm
+
+# Check pod logs
+kubectl logs &lt;pod-name&gt; -n brd-loancrm
+
+# Common issues:
+# - Image pull failure: Check ECR permissions
+# - Resource limits: Check requests/limits
+# - Secret issues: Verify secrets are correctly configured
+</code></pre>
+<h4 id="2-database-connection-issues"><strong>2. Database Connection Issues</strong></h4>
+<pre><code class="language-bash"># Check secrets
+kubectl get secrets -n brd-loancrm
+kubectl describe secret brd-loancrm-secrets -n brd-loancrm
+
+# Test database connection
+kubectl exec -it &lt;backend-pod&gt; -n brd-loancrm -- python manage.py dbshell
+
+# Common issues:
+# - Wrong database endpoint
+# - Incorrect credentials
+# - Security group blocking connections
+</code></pre>
+<h4 id="3-load-balancer-issues"><strong>3. Load Balancer Issues</strong></h4>
+<pre><code class="language-bash"># Check ingress status
+kubectl get ingress -n brd-loancrm
+kubectl describe ingress brd-loancrm-ingress -n brd-loancrm
+
+# Check ALB in AWS Console
+# Common issues:
+# - Target group health checks failing
+# - Security group blocking traffic
+# - SSL certificate issues
+</code></pre>
+<h4 id="4-image-pull-issues"><strong>4. Image Pull Issues</strong></h4>
+<pre><code class="language-bash"># Check ECR login
+aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $(aws sts get-caller-identity --query Account --output text).dkr.ecr.ap-south-1.amazonaws.com
+
+# Check image exists
+aws ecr describe-images --repository-name brd-loancrm/masteradmin-backend
+
+# Common issues:
+# - ECR permissions
+# - Image not found
+# - Region mismatch
+</code></pre>
+<h4 id="5-high-resource-usage"><strong>5. High Resource Usage</strong></h4>
+<pre><code class="language-bash"># Check resource usage
+kubectl top pods -n brd-loancrm
+kubectl top nodes
+
+# Check resource limits
+kubectl describe pod &lt;pod-name&gt; -n brd-loancrm
+
+# Solutions:
+# - Increase resource limits
+# - Add more nodes
+# - Optimize application
+</code></pre>
+<h3 id="useful-debugging-commands"><strong>Useful Debugging Commands</strong></h3>
+<pre><code class="language-bash"># Port forward for local debugging
+kubectl port-forward -n brd-loancrm svc/masteradmin-backend 8000:8000
+
+# Execute commands in pod
+kubectl exec -n brd-loancrm deployment/masteradmin-backend -- python manage.py check
+
+# Check events
+kubectl get events -n brd-loancrm --sort-by='.lastTimestamp'
+
+# Check node status
+kubectl describe nodes
+</code></pre>
+<hr />
+<h2 id="all-required-files">📁 All Required Files</h2>
+<h3 id="1-infrastructure-files"><strong>1. Infrastructure Files</strong></h3>
+<h4 id="terraform-configuration"><strong>Terraform Configuration</strong></h4>
+<pre><code>aws-deployment/terraform/
+├── main.tf                    # Main Terraform configuration
+├── variables.tf              # Variable definitions
+├── terraform.tfvars.example  # Example variables
+└── terraform.tfvars          # Your actual variables
+</code></pre>
+<h4 id="manual-infrastructure-setup"><strong>Manual Infrastructure Setup</strong></h4>
+<pre><code>aws-deployment/01-infrastructure-setup.md    # Manual setup instructions
+</code></pre>
+<h3 id="2-kubernetes-manifests"><strong>2. Kubernetes Manifests</strong></h3>
+<h4 id="core-configuration"><strong>Core Configuration</strong></h4>
+<pre><code>aws-deployment/k8s/
+├── namespace.yaml            # Namespace definition
+├── configmaps.yaml           # Application configuration
+├── secrets.yaml              # Secrets (update with your values)
+├── pvcs.yaml                 # Persistent volume claims
+├── redis.yaml                # Redis deployment
+├── nginx.yaml                # Nginx reverse proxy
+└── ingress.yaml              # Load balancer ingress
+</code></pre>
+<h4 id="backend-deployments"><strong>Backend Deployments</strong></h4>
+<pre><code>aws-deployment/k8s/backends/
+├── masteradmin-backend.yaml   # MasterAdmin backend
+├── tenant-backend.yaml        # Tenant backend
+├── crm-backend.yaml          # CRM backend
+├── finance-backend.yaml       # Finance backend
+├── agents-backend.yaml       # Agents backend
+├── channel-backend.yaml      # Channel backend
+├── fraud-backend.yaml        # Fraud backend
+├── legal-backend.yaml        # Legal backend
+├── operations-backend.yaml    # Operations backend
+├── salescrm-backend.yaml     # SalesCRM backend
+├── tenantadmin-backend.yaml   # TenantAdmin backend
+└── valuation-backend.yaml    # Valuation backend
+</code></pre>
+<h4 id="frontend-deployments"><strong>Frontend Deployments</strong></h4>
+<pre><code>aws-deployment/k8s/frontends/
+├── website-frontend.yaml     # Main website
+├── masteradmin-frontend.yaml # MasterAdmin frontend
+├── tenant-frontend.yaml      # Tenant frontend
+├── crm-frontend.yaml        # CRM frontend
+├── finance-frontend.yaml     # Finance frontend
+├── salescrm-frontend.yaml    # SalesCRM frontend
+├── tenantadmin-frontend.yaml # TenantAdmin frontend
+├── channel-frontend.yaml     # Channel frontend
+├── fraud-frontend.yaml       # Fraud frontend
+├── legal-frontend.yaml       # Legal frontend
+├── operations-frontend.yaml # Operations frontend
+└── valuation-frontend.yaml  # Valuation frontend
+</code></pre>
+<h3 id="3-docker-files"><strong>3. Docker Files</strong></h3>
+<h4 id="build-scripts"><strong>Build Scripts</strong></h4>
+<pre><code>aws-deployment/docker/
+├── build-and-push.sh        # Build and push all images
+└── update-k8s-images.sh    # Update K8s manifests
+</code></pre>
+<h4 id="dockerfiles"><strong>Dockerfiles</strong></h4>
+<pre><code>Dockerfile.backend           # Backend Dockerfile
+Dockerfile.frontend          # Frontend Dockerfile
+
+# Individual service Dockerfiles
+BRD_MasterAdmin_Backend_1.1/Dockerfile
+BRD-MergedTenantMaster-Backend/Dockerfile
+BRD_CRM_1.1_BACKEND/Dockerfile
+... (one for each backend service)
+
+BRD-website-main/Dockerfile
+BRD_MasterAdmin_Frontend_1.1/Dockerfile
+BRD-MergedTenantMaster-Frontend/Dockerfile
+... (one for each frontend service)
+</code></pre>
+<h3 id="4-monitoring-files"><strong>4. Monitoring Files</strong></h3>
+<pre><code>aws-deployment/monitoring/
+├── prometheus.yaml          # Prometheus deployment
+└── grafana.yaml             # Grafana deployment
+</code></pre>
+<h3 id="5-scripts"><strong>5. Scripts</strong></h3>
+<pre><code>aws-deployment/scripts/
+└── deploy.sh               # Main deployment script
+</code></pre>
+<h3 id="6-cicd-files"><strong>6. CI/CD Files</strong></h3>
+<pre><code>.github/workflows/
+└── aws-deploy.yml          # GitHub Actions workflow
+</code></pre>
+<h3 id="7-configuration-files"><strong>7. Configuration Files</strong></h3>
+<h4 id="environment-files"><strong>Environment Files</strong></h4>
+<pre><code>.env                        # Production environment
+.env.example               # Environment template
+</code></pre>
+<h4 id="application-configuration"><strong>Application Configuration</strong></h4>
+<pre><code>docker-compose.yml          # Local development
+Makefile                   # Build commands
+nginx/                     # Nginx configuration
+</code></pre>
+<h3 id="8-documentation-files"><strong>8. Documentation Files</strong></h3>
+<pre><code>DEPLOYMENT-STEPS.md         # Step-by-step deployment guide
+GITHUB-SETUP.md           # GitHub setup instructions
+aws-deployment/README.md    # Deployment overview
+aws-deployment/02-complete-deployment-guide.md  # Complete guide
+</code></pre>
+<h3 id="9-application-source-code"><strong>9. Application Source Code</strong></h3>
+<h4 id="backend-services"><strong>Backend Services</strong></h4>
+<pre><code>BRD_MasterAdmin_Backend_1.1/           # MasterAdmin backend
+BRD-MergedTenantMaster-Backend/          # Tenant backend
+BRD_CRM_1.1_BACKEND/                  # CRM backend
+BRD_FINANCE_DASHBOARD_Backend/          # Finance backend
+BRD-AgentsApp-Backend/                 # Agents backend
+BRD-ChannelPartnerDashboard-Backend/     # Channel backend
+BRD-FraudTeam-Dashboard-Backend/         # Fraud backend
+BRD-LegalDashboard-Backend/              # Legal backend
+BRD-OperationVerification-Backend/       # Operations backend
+BRD-SalesCRM-Dashboard-Backend/          # SalesCRM backend
+BRD-TenantAdmin_backend_2.0/            # TenantAdmin backend
+BRD-Valuation-Dashboard-Backend/        # Valuation backend
+</code></pre>
+<h4 id="frontend-applications"><strong>Frontend Applications</strong></h4>
+<pre><code>BRD-website-main/                        # Main website
+BRD_MasterAdmin_Frontend_1.1/           # MasterAdmin frontend
+BRD-MergedTenantMaster-Frontend/          # Tenant frontend
+BRD_CRM-1.1/                           # CRM frontend
+BRD_FINANCE_DASHBOARD/                   # Finance frontend
+BRD_SALES_CRM/                          # SalesCRM frontend
+BRD_TenantAdmin_Frontend_1.1/            # TenantAdmin frontend
+BRD-ChannelPartner-Dashboard/             # Channel frontend
+BRD-FraudTeamDashboard/                  # Fraud frontend
+BRD-LEGAL-dashboard/                     # Legal frontend
+BRD-Operation-Verification-Dashboard/      # Operations frontend
+BRD-ValuationDashboard/                  # Valuation frontend
+</code></pre>
+<hr />
+<h2 id="quick-deployment-checklist">🎯 Quick Deployment Checklist</h2>
+<h3 id="pre-deployment-checklist"><strong>Pre-Deployment Checklist</strong></h3>
+<ul>
+<li>[ ] AWS CLI installed and configured</li>
+<li>[ ] kubectl installed</li>
+<li>[ ] Docker installed</li>
+<li>[ ] Terraform installed (optional)</li>
+<li>[ ] Git repository cloned</li>
+<li>[ ] Environment variables configured</li>
+<li>[ ] AWS credentials verified</li>
+</ul>
+<h3 id="infrastructure-checklist"><strong>Infrastructure Checklist</strong></h3>
+<ul>
+<li>[ ] VPC and subnets created</li>
+<li>[ ] EKS cluster running</li>
+<li>[ ] RDS instance created</li>
+<li>[ ] ElastiCache Redis created</li>
+<li>[ ] ECR repositories created</li>
+<li>[ ] S3 bucket created</li>
+<li>[ ] IAM roles configured</li>
+</ul>
+<h3 id="application-checklist"><strong>Application Checklist</strong></h3>
+<ul>
+<li>[ ] Docker images built and pushed</li>
+<li>[ ] Kubernetes manifests applied</li>
+<li>[ ] Secrets configured</li>
+<li>[ ] Databases created</li>
+<li>[ ] Migrations run</li>
+<li>[ ] Static files collected</li>
+<li>[ ] Load balancer configured</li>
+<li>[ ] Monitoring deployed</li>
+</ul>
+<h3 id="post-deployment-checklist"><strong>Post-Deployment Checklist</strong></h3>
+<ul>
+<li>[ ] All pods running</li>
+<li>[ ] Services accessible</li>
+<li>[ ] Load balancer working</li>
+<li>[ ] Monitoring dashboards accessible</li>
+<li>[ ] CI/CD pipeline working</li>
+<li>[ ] Backups configured</li>
+<li>[ ] Alerts configured</li>
+</ul>
+<hr />
+<h2 id="final-deployment-commands">🚀 Final Deployment Commands</h2>
+<h3 id="one-command-deployment"><strong>One-Command Deployment</strong></h3>
+<pre><code class="language-bash"># Complete deployment with single command
+chmod +x aws-deployment/scripts/deploy.sh
+./aws-deployment/scripts/deploy.sh infra
+</code></pre>
+<h3 id="step-by-step-deployment"><strong>Step-by-Step Deployment</strong></h3>
+<pre><code class="language-bash"># 1. Deploy infrastructure
+cd aws-deployment/terraform
+terraform init &amp;&amp; terraform apply
+
+# 2. Deploy application
+cd ../..
+./aws-deployment/scripts/deploy.sh
+
+# 3. Verify deployment
+kubectl get pods -n brd-loancrm
+kubectl get ingress -n brd-loancrm
+</code></pre>
+<hr />
+<h2 id="success">🎉 Success!</h2>
+<p>Your BRD LoanCRM system is now deployed on AWS with:
+- ✅ 24 microservices running
+- ✅ High availability setup
+- ✅ Auto-scaling capabilities
+- ✅ Monitoring and logging
+- ✅ CI/CD pipeline
+- ✅ Security best practices
+- ✅ Cost optimization</p>
+<p><strong>Access your application at the Load Balancer URL!</strong></p>
+<hr />
+<h2 id="support-and-maintenance">📞 Support and Maintenance</h2>
+<h3 id="regular-maintenance-tasks"><strong>Regular Maintenance Tasks</strong></h3>
+<ul>
+<li>Monitor resource usage</li>
+<li>Update dependencies</li>
+<li>Backup databases</li>
+<li>Review security updates</li>
+<li>Optimize costs</li>
+</ul>
+<h3 id="emergency-procedures"><strong>Emergency Procedures</strong></h3>
+<ul>
+<li>Scale services during high load</li>
+<li>Rollback failed deployments</li>
+<li>Restore from backups</li>
+<li>Troubleshoot issues</li>
+</ul>
+<h3 id="contact-information"><strong>Contact Information</strong></h3>
+<ul>
+<li>AWS Support: https://aws.amazon.com/support/</li>
+<li>Kubernetes Documentation: https://kubernetes.io/docs/</li>
+<li>Terraform Documentation: https://www.terraform.io/docs/</li>
+</ul>
+<hr />
+<p><strong>Document Version: 1.0</strong><br />
+<strong>Last Updated: April 2026</strong><br />
+<strong>Next Review: May 2026</strong></p>
+        
+        <div class="footer">
+            <p>© 2026 BRD LoanCRM - AWS Deployment Guide</p>
+            <p>For support and updates, visit the project repository</p>
+        </div>
+    </div>
+</body>
+</html>
