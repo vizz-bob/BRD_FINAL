@@ -1,0 +1,275 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: brd-loancrm-config
+  namespace: brd-loancrm
+data:
+  DJANGO_SETTINGS_MODULE: "brd_platform.settings"
+  DEBUG: "False"
+  ENVIRONMENT: "production"
+  REDIS_URL: "redis://brd-loancrm-redis:6379/0"
+  CELERY_BROKER_URL: "redis://brd-loancrm-redis:6379/1"
+  AWS_REGION: "ap-south-1"
+  AWS_S3_BUCKET: "brd-loancrm-media-production"
+  EMAIL_HOST: "smtp.gmail.com"
+  EMAIL_PORT: "587"
+  EMAIL_USE_TLS: "True"
+  ALLOWED_HOSTS: "yourdomain.com,localhost,127.0.0.1"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: brd-loancrm
+data:
+  nginx.conf: |
+    upstream masteradmin_backend {
+        server masteradmin-backend:8000;
+    }
+    upstream tenant_backend {
+        server tenant-backend:8000;
+    }
+    upstream crm_backend {
+        server crm-backend:8000;
+    }
+    upstream finance_backend {
+        server finance-backend:8000;
+    }
+    upstream agents_backend {
+        server agents-backend:8000;
+    }
+    upstream channel_backend {
+        server channel-backend:8000;
+    }
+    upstream fraud_backend {
+        server fraud-backend:8000;
+    }
+    upstream legal_backend {
+        server legal-backend:8000;
+    }
+    upstream operations_backend {
+        server operations-backend:8000;
+    }
+    upstream salescrm_backend {
+        server salescrm-backend:8000;
+    }
+    upstream tenantadmin_backend {
+        server tenantadmin-backend:8000;
+    }
+    upstream valuation_backend {
+        server valuation-backend:8000;
+    }
+
+    server {
+        listen 80;
+        server_name _;
+        
+        client_max_body_size 20M;
+        
+        # Frontend routes
+        location / {
+            proxy_pass http://website-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /master-admin {
+            proxy_pass http://masteradmin-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /tenant {
+            proxy_pass http://tenant-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /crm {
+            proxy_pass http://crm-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /finance {
+            proxy_pass http://finance-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /sales-crm {
+            proxy_pass http://salescrm-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /tenant-admin {
+            proxy_pass http://tenantadmin-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /channel {
+            proxy_pass http://channel-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /fraud {
+            proxy_pass http://fraud-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /legal {
+            proxy_pass http://legal-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /operations {
+            proxy_pass http://operations-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /valuation {
+            proxy_pass http://valuation-frontend:80;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        # Backend API routes
+        location /api/master-admin {
+            proxy_pass http://masteradmin_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/tenant {
+            proxy_pass http://tenant_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/crm {
+            proxy_pass http://crm_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/finance {
+            proxy_pass http://finance_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/agents {
+            proxy_pass http://agents_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/channel {
+            proxy_pass http://channel_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/fraud {
+            proxy_pass http://fraud_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/legal {
+            proxy_pass http://legal_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/operations {
+            proxy_pass http://operations_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/sales-crm {
+            proxy_pass http://salescrm_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/tenant-admin {
+            proxy_pass http://tenantadmin_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/valuation {
+            proxy_pass http://valuation_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        # Static and media files
+        location /static/ {
+            alias /var/www/static/;
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+        
+        location /media/ {
+            alias /var/www/media/;
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+    }

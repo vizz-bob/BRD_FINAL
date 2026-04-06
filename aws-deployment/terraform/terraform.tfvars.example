@@ -1,0 +1,36 @@
+# Copy this file to terraform.tfvars and update with your values
+
+aws_region = "ap-south-1"
+environment = "production"
+project_name = "BRD-LoanCRM"
+
+# Networking
+vpc_cidr = "10.0.0.0/16"
+azs = ["ap-south-1a", "ap-south-1b"]
+public_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnets = ["10.0.11.0/24", "10.0.12.0/24"]
+
+# EKS Cluster
+cluster_name = "brd-loancrm-cluster"
+cluster_version = "1.28"
+instance_types = ["t3.medium", "t3.large"]
+min_nodes = 2
+max_nodes = 5
+desired_nodes = 3
+
+# RDS Database
+db_instance_class = "db.t3.medium"
+db_allocated_storage = 100
+db_max_allocated_storage = 1000
+db_username = "loancrm_admin"
+db_password = "YourStrongPassword123!"
+
+# Redis
+redis_node_type = "cache.t3.micro"
+
+# S3
+s3_bucket_name = "brd-loancrm-media-production"
+
+# Domain
+domain_name = "yourdomain.com"
+certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012"

@@ -1,0 +1,194 @@
+name: AWS Deploy to EKS
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  AWS_REGION: ap-south-1
+  EKS_CLUSTER_NAME: brd-loancrm-cluster
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com
+
+jobs:
+  # Build and test job
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install backend dependencies
+      run: |
+        cd BRD_MasterAdmin_Backend_1.1
+        pip install -r requirements.txt
+        pip install pytest pytest-django
+
+    - name: Run backend tests
+      run: |
+        cd BRD_MasterAdmin_Backend_1.1
+        python manage.py test
+
+    - name: Install frontend dependencies
+      run: |
+        cd BRD_MasterAdmin_Frontend_1.1
+        npm ci
+
+    - name: Run frontend tests
+      run: |
+        cd BRD_MasterAdmin_Frontend_1.1
+        npm run test
+
+  # Build and push Docker images
+  build-and-push:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build and push backend images
+      run: |
+        chmod +x aws-deployment/docker/build-and-push.sh
+        ./aws-deployment/docker/build-and-push.sh
+
+  # Deploy to EKS
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Update kubeconfig
+      run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+
+    - name: Update k8s manifests with ECR images
+      run: |
+        chmod +x aws-deployment/docker/update-k8s-images.sh
+        ./aws-deployment/docker/update-k8s-images.sh
+
+    - name: Apply Kubernetes manifests
+      run: |
+        kubectl apply -f aws-deployment/k8s/namespace.yaml
+        kubectl apply -f aws-deployment/k8s/configmaps.yaml
+        kubectl apply -f aws-deployment/k8s/secrets.yaml
+        kubectl apply -f aws-deployment/k8s/pvcs.yaml
+        kubectl apply -f aws-deployment/k8s/redis.yaml
+        kubectl apply -f aws-deployment/k8s/nginx.yaml
+        chmod +x aws-deployment/k8s/deploy-all-backends.sh
+        ./aws-deployment/k8s/deploy-all-backends.sh
+
+    - name: Deploy frontends
+      run: |
+        kubectl apply -f aws-deployment/k8s/frontends/
+
+    - name: Apply Ingress
+      run: |
+        kubectl apply -f aws-deployment/k8s/ingress.yaml
+
+    - name: Verify deployment
+      run: |
+        kubectl get pods -n brd-loancrm
+        kubectl get services -n brd-loancrm
+        kubectl get ingress -n brd-loancrm
+
+    - name: Run database migrations
+      run: |
+        # Run migrations for each backend service
+        kubectl exec -n brd-loancrm deployment/masteradmin-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/tenant-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/crm-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/finance-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/agents-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/channel-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/fraud-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/legal-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/operations-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/salescrm-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/tenantadmin-backend -- python manage.py migrate
+        kubectl exec -n brd-loancrm deployment/valuation-backend -- python manage.py migrate
+
+    - name: Collect static files
+      run: |
+        # Collect static files for each backend service
+        kubectl exec -n brd-loancrm deployment/masteradmin-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/tenant-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/crm-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/finance-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/agents-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/channel-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/fraud-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/legal-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/operations-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/salescrm-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/tenantadmin-backend -- python manage.py collectstatic --noinput
+        kubectl exec -n brd-loancrm deployment/valuation-backend -- python manage.py collectstatic --noinput
+
+    - name: Restart services
+      run: |
+        kubectl rollout restart deployment/masteradmin-backend -n brd-loancrm
+        kubectl rollout restart deployment/tenant-backend -n brd-loancrm
+        kubectl rollout restart deployment/crm-backend -n brd-loancrm
+        kubectl rollout restart deployment/finance-backend -n brd-loancrm
+        kubectl rollout restart deployment/agents-backend -n brd-loancrm
+        kubectl rollout restart deployment/channel-backend -n brd-loancrm
+        kubectl rollout restart deployment/fraud-backend -n brd-loancrm
+        kubectl rollout restart deployment/legal-backend -n brd-loancrm
+        kubectl rollout restart deployment/operations-backend -n brd-loancrm
+        kubectl rollout restart deployment/salescrm-backend -n brd-loancrm
+        kubectl rollout restart deployment/tenantadmin-backend -n brd-loancrm
+        kubectl rollout restart deployment/valuation-backend -n brd-loancrm
+        kubectl rollout restart deployment/nginx -n brd-loancrm
+
+    - name: Wait for rollout
+      run: |
+        kubectl rollout status deployment/masteradmin-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/tenant-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/crm-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/finance-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/agents-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/channel-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/fraud-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/legal-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/operations-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/salescrm-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/tenantadmin-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/valuation-backend -n brd-loancrm --timeout=300s
+        kubectl rollout status deployment/nginx -n brd-loancrm --timeout=300s
+
+    - name: Notify deployment success
+      run: |
+        echo "Deployment completed successfully!"
+        echo "Application is available at: https://yourdomain.com"

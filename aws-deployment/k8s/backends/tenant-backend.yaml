@@ -1,0 +1,172 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tenant-backend
+  namespace: brd-loancrm
+  labels:
+    app: tenant-backend
+    service: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tenant-backend
+  template:
+    metadata:
+      labels:
+        app: tenant-backend
+        service: backend
+    spec:
+      containers:
+      - name: tenant-backend
+        image: <account-id>.dkr.ecr.ap-south-1.amazonaws.com/brd-loancrm/tenant-backend:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: db-host
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: db-port
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: tenant-db-name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: tenant-db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: tenant-db-password
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: django-secret-key
+        - name: JWT_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: jwt-secret-key
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: aws-access-key-id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: aws-secret-access-key
+        - name: EMAIL_HOST_USER
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: email-host-user
+        - name: EMAIL_HOST_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: brd-loancrm-secrets
+              key: email-host-password
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: brd-loancrm-config
+              key: DEBUG
+        - name: ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: brd-loancrm-config
+              key: ENVIRONMENT
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: brd-loancrm-config
+              key: REDIS_URL
+        - name: CELERY_BROKER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: brd-loancrm-config
+              key: CELERY_BROKER_URL
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: brd-loancrm-config
+              key: AWS_REGION
+        - name: AWS_S3_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              name: brd-loancrm-config
+              key: AWS_S3_BUCKET
+        - name: EMAIL_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: brd-loancrm-config
+              key: EMAIL_HOST
+        - name: EMAIL_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: brd-loancrm-config
+              key: EMAIL_PORT
+        - name: EMAIL_USE_TLS
+          valueFrom:
+            configMapKeyRef:
+              name: brd-loancrm-config
+              key: EMAIL_USE_TLS
+        - name: ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: brd-loancrm-config
+              key: ALLOWED_HOSTS
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health/
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health/
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        volumeMounts:
+        - name: media-files
+          mountPath: /app/media
+      volumes:
+      - name: media-files
+        persistentVolumeClaim:
+          claimName: media-files-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tenant-backend
+  namespace: brd-loancrm
+  labels:
+    app: tenant-backend
+    service: backend
+spec:
+  selector:
+    app: tenant-backend
+  ports:
+  - port: 8000
+    targetPort: 8000
+  type: ClusterIP
