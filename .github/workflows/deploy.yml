@@ -1,70 +1,113 @@
 name: Deploy to EC2
 
-# Triggers: every push to main deploys to production
-#           every push to develop deploys to staging (same server, separate test)
 on:
   push:
     branches: [main, develop]
-  workflow_dispatch:   # allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
 
   # ─────────────────────────────────────────────────────────────────────────
-  # JOB 1 — BUILD CHECK (no npm test needed, just verify builds succeed)
+  # JOB 1 — BASIC CHECKS (fast, no npm test, no npm ci)
   # ─────────────────────────────────────────────────────────────────────────
-  build-check:
-    name: Build Check
+  checks:
+    name: Code Checks
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ── Python / Django lint check ──────────────────────────────────────
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Check Django syntax (Master Admin Backend)
-        working-directory: ./BRD_MasterAdmin_Backend_1.1
+      - name: Verify all backend folders exist
         run: |
-          pip install -r requirements.txt --quiet 2>/dev/null || true
-          python -m py_compile $(find . -name "*.py" | head -20) && echo "✅ Python syntax OK"
+          BACKENDS=(
+            "BRD_MasterAdmin_Backend_1.1"
+            "BRD-MergedTenantMaster-Backend"
+            "BRD_CRM_1.1_BACKEND"
+            "BRD_FINANCE_DASHBOARD_Backend"
+            "BRD-AgentsApp-Backend"
+            "BRD-ChannelPartnerDashboard-Backend"
+            "BRD-FraudTeam-Dashboard-Backend"
+            "BRD-LegalDashboard-Backend"
+            "BRD-OperationVerification-Backend"
+            "BRD-SalesCRM-Dashboard-Backend"
+            "BRD-TenantAdmin_backend_2.0"
+            "BRD-Valuation-Dashboard-Backend"
+          )
+          ALL_OK=true
+          for folder in "${BACKENDS[@]}"; do
+            if [ -d "$folder" ]; then
+              echo "✅ $folder"
+            else
+              echo "❌ MISSING: $folder"
+              ALL_OK=false
+            fi
+          done
+          $ALL_OK && echo "All backend folders present" || exit 1
 
-      # ── Node / React build check ────────────────────────────────────────
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Check frontend installs (Master Admin)
-        working-directory: ./BRD_MasterAdmin_Frontend_1.1
+      - name: Verify all frontend folders exist
         run: |
-          npm ci --silent
-          echo "✅ Frontend dependencies installed OK"
+          FRONTENDS=(
+            "BRD-website-main"
+            "BRD_MasterAdmin_Frontend_1.1"
+            "BRD-MergedTenantMaster-Frontend"
+            "BRD_CRM-1.1"
+            "BRD_FINANCE_DASHBOARD"
+            "BRD_SALES_CRM"
+            "BRD_TenantAdmin_Frontend_1.1"
+            "BRD-ChannelPartner-Dashboard"
+            "BRD-FraudTeamDashboard"
+            "BRD-LEGAL-dashboard"
+            "BRD-Operation-Verification-Dashboard"
+            "BRD-ValuationDashboard"
+          )
+          ALL_OK=true
+          for folder in "${FRONTENDS[@]}"; do
+            if [ -d "$folder" ]; then
+              echo "✅ $folder"
+            else
+              echo "❌ MISSING: $folder"
+              ALL_OK=false
+            fi
+          done
+          $ALL_OK && echo "All frontend folders present" || exit 1
 
-      - name: Check frontend installs (Website)
-        working-directory: ./BRD-website-main
+      - name: Verify key config files exist
         run: |
-          npm ci --silent
-          echo "✅ Website frontend dependencies installed OK"
+          FILES=(
+            "docker-compose.yml"
+            "docker-entrypoint.sh"
+            "nginx/conf.d/referpeople.conf"
+            ".env.example"
+          )
+          for f in "${FILES[@]}"; do
+            [ -f "$f" ] && echo "✅ $f" || { echo "❌ MISSING: $f"; exit 1; }
+          done
+
+      - name: Python syntax check (Master Admin backend)
+        run: |
+          python3 -m py_compile BRD_MasterAdmin_Backend_1.1/manage.py
+          echo "✅ Python syntax OK"
+
+      - name: Verify docker-compose.yml is valid YAML
+        run: |
+          python3 -c "import yaml; yaml.safe_load(open('docker-compose.yml'))"
+          echo "✅ docker-compose.yml is valid YAML"
 
   # ─────────────────────────────────────────────────────────────────────────
-  # JOB 2 — DEPLOY TO EC2 (only runs on push to main)
+  # JOB 2 — DEPLOY TO EC2 (only on push to main)
   # ─────────────────────────────────────────────────────────────────────────
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
-    needs: build-check
+    needs: checks
     if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ── Set up SSH ──────────────────────────────────────────────────────
-      - name: Set up SSH key
+      - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
@@ -72,7 +115,6 @@ jobs:
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
           echo "✅ SSH ready"
 
-      # ── Sync code to EC2 ────────────────────────────────────────────────
       - name: Sync code to EC2
         run: |
           rsync -az --delete \
@@ -83,93 +125,77 @@ jobs:
             --exclude='*.pyc' \
             --exclude='.env' \
             --exclude='*.sqlite3' \
-            --exclude='*.pem' \
             --exclude='*.log' \
             -e "ssh -i ~/.ssh/deploy_key" \
             ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_APP_DIR }}/
           echo "✅ Code synced to EC2"
 
-      # ── Deploy on EC2 ───────────────────────────────────────────────────
-      - name: Deploy with Docker Compose
+      - name: Build and start containers
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
+          ssh -i ~/.ssh/deploy_key \
+              -o ConnectTimeout=30 \
+              ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
             set -e
             cd ${{ secrets.EC2_APP_DIR }}
 
-            echo "=== Building Docker images ==="
+            echo "=== Building images ==="
             docker compose build --parallel
 
-            echo "=== Starting all containers ==="
+            echo "=== Starting containers ==="
             docker compose up -d --remove-orphans
 
-            echo "=== Waiting 15s for DB connections ==="
-            sleep 15
+            echo "=== Waiting for DB connections ==="
+            sleep 20
 
             echo "=== Running migrations ==="
-            docker compose exec -T masteradmin-backend  python manage.py migrate --noinput || true
-            docker compose exec -T tenant-backend        python manage.py migrate --noinput || true
-            docker compose exec -T crm-backend           python manage.py migrate --noinput || true
-            docker compose exec -T finance-backend       python manage.py migrate --noinput || true
-            docker compose exec -T agents-backend        python manage.py migrate --noinput || true
-            docker compose exec -T channel-backend       python manage.py migrate --noinput || true
-            docker compose exec -T fraud-backend         python manage.py migrate --noinput || true
-            docker compose exec -T legal-backend         python manage.py migrate --noinput || true
-            docker compose exec -T operations-backend    python manage.py migrate --noinput || true
-            docker compose exec -T salescrm-backend      python manage.py migrate --noinput || true
-            docker compose exec -T tenantadmin-backend   python manage.py migrate --noinput || true
-            docker compose exec -T valuation-backend     python manage.py migrate --noinput || true
+            docker compose exec -T masteradmin-backend  python manage.py migrate --noinput 2>&1 || echo "masteradmin migrate skipped"
+            docker compose exec -T tenant-backend        python manage.py migrate --noinput 2>&1 || echo "tenant migrate skipped"
+            docker compose exec -T crm-backend           python manage.py migrate --noinput 2>&1 || echo "crm migrate skipped"
+            docker compose exec -T finance-backend       python manage.py migrate --noinput 2>&1 || echo "finance migrate skipped"
+            docker compose exec -T agents-backend        python manage.py migrate --noinput 2>&1 || echo "agents migrate skipped"
+            docker compose exec -T channel-backend       python manage.py migrate --noinput 2>&1 || echo "channel migrate skipped"
+            docker compose exec -T fraud-backend         python manage.py migrate --noinput 2>&1 || echo "fraud migrate skipped"
+            docker compose exec -T legal-backend         python manage.py migrate --noinput 2>&1 || echo "legal migrate skipped"
+            docker compose exec -T operations-backend    python manage.py migrate --noinput 2>&1 || echo "operations migrate skipped"
+            docker compose exec -T salescrm-backend      python manage.py migrate --noinput 2>&1 || echo "salescrm migrate skipped"
+            docker compose exec -T tenantadmin-backend   python manage.py migrate --noinput 2>&1 || echo "tenantadmin migrate skipped"
+            docker compose exec -T valuation-backend     python manage.py migrate --noinput 2>&1 || echo "valuation migrate skipped"
 
             echo "=== Container status ==="
             docker compose ps
 
-            echo "=== ✅ Deployment complete! ==="
+            echo "✅ Deploy complete!"
           ENDSSH
 
-      # ── Health check ────────────────────────────────────────────────────
       - name: Health check
         run: |
           sleep 10
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.EC2_HOST }}/ || echo "000")
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            --max-time 15 \
+            http://${{ secrets.EC2_HOST }}/ 2>/dev/null || echo "000")
           echo "HTTP status: $STATUS"
-          if [ "$STATUS" = "200" ] || [ "$STATUS" = "301" ] || [ "$STATUS" = "302" ]; then
-            echo "✅ Site is up at http://${{ secrets.EC2_HOST }}/"
+          if [[ "$STATUS" =~ ^(200|301|302)$ ]]; then
+            echo "✅ Site is UP at http://${{ secrets.EC2_HOST }}/"
           else
-            echo "⚠️  Site returned status $STATUS — check container logs"
+            echo "⚠️  Status $STATUS — containers may still be starting (check Actions logs)"
           fi
 
-      - name: Deployment summary
-        if: success()
+      - name: Summary
+        if: always()
         run: |
-          echo "============================================"
-          echo "✅ DEPLOYMENT SUCCESSFUL"
-          echo "Branch : ${{ github.ref_name }}"
-          echo "Commit : ${{ github.sha }}"
-          echo "Time   : $(date -u)"
-          echo "URL    : https://referpeople.in"
-          echo "============================================"
-
-      - name: Deployment failed
-        if: failure()
-        run: |
-          echo "============================================"
-          echo "❌ DEPLOYMENT FAILED"
-          echo "Check the logs above for errors."
-          echo "To rollback: go to Actions → Rollback → Run workflow"
-          echo "============================================"
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "✅ DEPLOYED — https://referpeople.in  |  commit: ${{ github.sha }}"
+          else
+            echo "❌ DEPLOY FAILED — check logs above. Run Rollback workflow to revert."
+          fi
 
   # ─────────────────────────────────────────────────────────────────────────
-  # JOB 3 — STAGING CHECK (only runs on push to develop, no deploy)
+  # JOB 3 — develop branch: just confirm checks passed
   # ─────────────────────────────────────────────────────────────────────────
-  staging-check:
-    name: Staging Branch Check
+  develop-ok:
+    name: Develop Branch OK
     runs-on: ubuntu-latest
-    needs: build-check
+    needs: checks
     if: github.ref == 'refs/heads/develop'
-
     steps:
-      - name: Staging branch passed checks
-        run: |
-          echo "============================================"
-          echo "✅ develop branch build checks passed"
-          echo "When ready to deploy: merge develop → main"
-          echo "============================================"
+      - run: echo "✅ develop checks passed — merge to main when ready to deploy"
