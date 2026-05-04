@@ -77,7 +77,7 @@ jobs:
           FILES=(
             "docker-compose.yml"
             "docker-entrypoint.sh"
-            "nginx/conf.d/referpeople.conf"
+            "nginx/conf.d/loancrm.conf"
             ".env.example"
           )
           for f in "${FILES[@]}"; do
