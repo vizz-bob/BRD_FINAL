@@ -1,63 +1,75 @@
-# ── Python ────────────────────────────────────────────────────────────────────
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
+*.pyd
+*.egg
 *.egg-info/
-venv/
+dist/
+build/
+*.pyc
+.Python
 env/
+venv/
 .venv/
+.env
+*.env
 
-# ── Django ────────────────────────────────────────────────────────────────────
+# Django
 staticfiles/
 media/
-db.sqlite3
 *.sqlite3
+local_settings.py
 
-# ── Node / Frontend ──────────────────────────────────────────────────────────
+# Node
 node_modules/
-build/
 dist/
-npm-debug.log*
-yarn-error.log*
-.eslintcache
-/apps/loancrm/BRD_MasterAdmin_Frontend_1.1/dist/
+.cache/
+.parcel-cache/
+*.local
 
-# ── Docker ────────────────────────────────────────────────────────────────────
-*.log
-logs/
-docker-compose.override.yml
+# React / Vite
+dist/
+build/
 
-# ── System ────────────────────────────────────────────────────────────────────
-.DS_Store
-~$*
+# Environment files (NEVER commit)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.production
+*.env
+
+# SSL certificates
+nginx/ssl/
+*.pem
+*.crt
+*.key
+*.p12
+
+# Docker
+.docker/
+
+# IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
-# ── Secrets — DO NOT COMMIT raw private keys or PEM files ────────────────────
-*.pem
-*.key
-StaggingKey.pem
-.aws/
+# OS
+.DS_Store
+Thumbs.db
 
-# ── Documents (generated, not source) ────────────────────────────────────────
-*.docx
-*.doc
-A_BRD_Documents/
-aws/
-setup_project.py
+# Logs
+*.log
+logs/
 
-# ── .env files: INCLUDED in git for deployment convenience ──────────────────
-# The .env files contain non-sensitive staging credentials and must be
-# committed so that EC2 can run without a manual setup step.
-# For production, rotate secrets and use AWS Secrets Manager instead.
-# (Lines below explicitly UN-ignore .env)
-!.env
-!**/.env
+# Kubernetes secrets (never commit real secrets)
+aws-deployment/k8s/secrets.yaml
 
-# ── .env.local files: LOCAL DEV ONLY — never push to git ────────────────────
-# These override .env for localhost development (DB_HOST=localhost, etc.)
-.env.local
-**/.env.local
-
-# ── Local dev scripts ─────────────────────────────────────────────────────────
-.local-logs/
+# Coverage
+htmlcov/
+.coverage
+coverage.xml

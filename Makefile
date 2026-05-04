@@ -1,73 +1,80 @@
-# =============================================================================
-# BRD Loan CRM Platform — Makefile
+# ReferPeople.in — Makefile
 # Usage: make <command>
-# =============================================================================
 
-.PHONY: help deploy build up down restart logs status migrate superusers clean
+.PHONY: help start stop restart build migrate superuser logs clean test
+
+COMPOSE = docker compose
+BACKENDS = realestate-backend loans-backend jobs-backend education-backend auth-backend masteradmin-backend
+FRONTENDS = realestate-frontend loans-frontend jobs-frontend education-frontend masteradmin-frontend
 
 help:
 	@echo ""
-	@echo "BRD Loan CRM — Available Commands"
-	@echo "═══════════════════════════════════════"
-	@echo "  make deploy      → Full deployment (build + up + migrate + superusers)"
-	@echo "  make build       → Build all Docker images"
-	@echo "  make up          → Start all containers (detached)"
-	@echo "  make down        → Stop all containers"
-	@echo "  make restart     → Restart all containers"
-	@echo "  make logs        → Follow all logs"
-	@echo "  make status      → Show container status"
-	@echo "  make migrate     → Run Django migrations on all backends"
-	@echo "  make superusers  → Create admin and tenant superusers"
-	@echo "  make clean       → Stop and remove containers + volumes"
+	@echo "ReferPeople.in Platform Commands:"
+	@echo "=================================="
+	@echo "  make start        - Start all services"
+	@echo "  make stop         - Stop all services"
+	@echo "  make restart      - Restart all services"
+	@echo "  make build        - Build all Docker images"
+	@echo "  make migrate      - Run Django migrations on all backends"
+	@echo "  make superuser    - Create Super Admin account"
+	@echo "  make logs         - Tail logs from all services"
+	@echo "  make clean        - Remove all containers and volumes"
+	@echo "  make test         - Run all tests"
+	@echo "  make status       - Show status of all services"
 	@echo ""
 
-deploy:
-	@chmod +x deploy.sh && ./deploy.sh
+start:
+	@echo "Starting ReferPeople.in platform..."
+	$(COMPOSE) up -d
+	@echo "Platform started! Visit http://localhost:3000"
 
-build:
-	docker compose build --parallel
-
-up:
-	docker compose up -d
-
-down:
-	docker compose down
+stop:
+	$(COMPOSE) down
 
 restart:
-	docker compose restart
+	$(COMPOSE) restart
 
-logs:
-	docker compose logs -f --tail=50
-
-status:
-	@echo ""
-	@docker compose ps
-	@echo ""
-	@echo "Running containers: $$(docker ps | grep loancrm | wc -l) / 26"
-	@echo ""
+build:
+	$(COMPOSE) build --no-cache
 
 migrate:
-	@echo "Running migrations on all backends..."
-	@for c in loancrm_masteradmin_backend loancrm_tenant_backend loancrm_crm_backend \
-	           loancrm_finance_backend loancrm_agents_backend loancrm_channel_backend \
-	           loancrm_fraud_backend loancrm_legal_backend loancrm_operations_backend \
-	           loancrm_salescrm_backend loancrm_tenantadmin_backend loancrm_valuation_backend; do \
-	    echo -n "  $$c: "; \
-	    docker exec $$c python manage.py migrate --noinput 2>&1 | tail -1; \
+	@for service in $(BACKENDS); do \
+		echo "Migrating $$service..."; \
+		$(COMPOSE) exec $$service python manage.py migrate; \
 	done
 
-superusers:
-	@echo "Creating superusers..."
-	@docker exec loancrm_masteradmin_backend python manage.py shell -c \
-	  "from django.contrib.auth import get_user_model; U=get_user_model(); \
-	   U.objects.create_superuser('admin','Admin@brd.com','Admin@1234') \
-	   if not U.objects.filter(email='Admin@brd.com').exists() else print('Admin exists')"
-	@docker exec loancrm_tenant_backend python manage.py shell -c \
-	  "from django.contrib.auth import get_user_model; U=get_user_model(); \
-	   U.objects.create_superuser('tenant','Tenant@brd.com','Tenant@1234') \
-	   if not U.objects.filter(email='Tenant@brd.com').exists() else print('Tenant exists')"
-	@echo "Done!"
+superuser:
+	$(COMPOSE) exec auth-backend python manage.py createsuperuser
+
+logs:
+	$(COMPOSE) logs -f --tail=100
+
+logs-backend:
+	$(COMPOSE) logs -f --tail=100 $(BACKENDS)
+
+logs-frontend:
+	$(COMPOSE) logs -f --tail=100 $(FRONTENDS)
 
 clean:
-	docker compose down -v
+	$(COMPOSE) down -v --remove-orphans
 	docker system prune -f
+
+test:
+	@for service in $(BACKENDS); do \
+		echo "Testing $$service..."; \
+		$(COMPOSE) exec $$service python manage.py test; \
+	done
+
+status:
+	$(COMPOSE) ps
+
+shell-re:
+	$(COMPOSE) exec realestate-backend bash
+
+shell-auth:
+	$(COMPOSE) exec auth-backend bash
+
+collectstatic:
+	@for service in $(BACKENDS); do \
+		$(COMPOSE) exec $$service python manage.py collectstatic --noinput; \
+	done
