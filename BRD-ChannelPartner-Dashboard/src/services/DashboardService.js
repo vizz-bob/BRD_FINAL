@@ -1,6 +1,6 @@
 // DashboardService.js
 // Base API URL — update this to match your Django backend host
-const BASE_URL = "http://localhost:8000/api";
+const BASE_URL = (import.meta.env.VITE_API_URL || "http://localhost:8000") + "/api";
 
 // ─────────────────────────────────────────────
 // Utility: central fetch wrapper

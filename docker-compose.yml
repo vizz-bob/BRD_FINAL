@@ -261,7 +261,7 @@ services:
       context: ./BRD-website-main
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api
+        - VITE_API_URL=http://65.1.45.32/api
     container_name: loancrm_website_frontend
     restart: unless-stopped
     ports:
@@ -274,7 +274,10 @@ services:
       context: ./BRD_MasterAdmin_Frontend_1.1
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/master-admin
+        # Code uses VITE_API_BASE_URL → axiosInstance baseURL = VITE_API_BASE_URL + "/api/v1"
+        # nginx strips /api/master-admin/ → backend receives /api/v1/...
+        - VITE_API_URL=http://65.1.45.32/api/master-admin
+        - VITE_API_BASE_URL=http://65.1.45.32/api/master-admin
     container_name: loancrm_masteradmin_frontend
     restart: unless-stopped
     ports:
@@ -287,7 +290,10 @@ services:
       context: ./BRD-MergedTenantMaster-Frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/tenant
+        # Code uses VITE_API_BASE_URL → axiosInstance baseURL = VITE_API_BASE_URL + "/api/v1/"
+        # nginx strips /api/tenant/ → backend receives /api/v1/...
+        - VITE_API_URL=http://65.1.45.32/api/tenant
+        - VITE_API_BASE_URL=http://65.1.45.32/api/tenant
     container_name: loancrm_tenant_frontend
     restart: unless-stopped
     ports:
@@ -300,7 +306,11 @@ services:
       context: ./BRD_CRM-1.1
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/crm
+        # Code uses VITE_API_BASE_URL directly as baseURL, calls corecrm/leads/pipeline/ (no leading slash)
+        # trailing slash important for axios relative path joining
+        # nginx strips /api/crm/ → backend receives /corecrm/... /leads/...
+        - VITE_API_URL=http://65.1.45.32/api/crm/
+        - VITE_API_BASE_URL=http://65.1.45.32/api/crm/
     container_name: loancrm_crm_frontend
     restart: unless-stopped
     ports:
@@ -313,7 +323,9 @@ services:
       context: ./BRD_FINANCE_DASHBOARD
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/finance
+        # Code uses VITE_API_URL, appends /loans/ /disbursements/ etc.
+        # nginx strips /api/finance/ → backend receives /api/v1/finance/loans/ etc.
+        - VITE_API_URL=http://65.1.45.32/api/finance/api/v1/finance
     container_name: loancrm_finance_frontend
     restart: unless-stopped
     ports:
@@ -326,7 +338,9 @@ services:
       context: ./BRD_SALES_CRM
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/sales-crm
+        # Code uses VITE_API_URL, appends /api/dashboard/ /api/leads/ etc.
+        # nginx strips /api/sales-crm/ → backend receives /api/dashboard/...
+        - VITE_API_URL=http://65.1.45.32/api/sales-crm
     container_name: loancrm_salescrm_frontend
     restart: unless-stopped
     ports:
@@ -339,7 +353,10 @@ services:
       context: ./BRD_TenantAdmin_Frontend_1.1
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/tenant-admin
+        # Code uses VITE_API_BASE_URL → axiosInstance baseURL = VITE_API_BASE_URL + "/api/v1/"
+        # nginx strips /api/tenant-admin/ → backend receives /api/v1/crm/ /api/v1/user/ etc.
+        - VITE_API_URL=http://65.1.45.32/api/tenant-admin
+        - VITE_API_BASE_URL=http://65.1.45.32/api/tenant-admin
     container_name: loancrm_tenantadmin_frontend
     restart: unless-stopped
     ports:
@@ -352,7 +369,9 @@ services:
       context: ./BRD-ChannelPartner-Dashboard
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/channel
+        # Source files fixed to use VITE_API_URL + "/api", "/agent", "/manage" etc.
+        # nginx strips /api/channel/ → backend receives /api/... /agent/... /manage/...
+        - VITE_API_URL=http://65.1.45.32/api/channel
     container_name: loancrm_channel_frontend
     restart: unless-stopped
     ports:
@@ -365,7 +384,11 @@ services:
       context: ./BRD-FraudTeamDashboard
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/fraud
+        # Code uses VITE_API_BASE_URL as axiosInstance baseURL, calls /cases/ /settings/ /accounts/
+        # Axios combineURLs: baseURL/api + /cases/ = baseURL/api/cases/
+        # nginx strips /api/fraud/ → backend receives /api/cases/ /api/auth/ etc.
+        - VITE_API_URL=http://65.1.45.32/api/fraud/api
+        - VITE_API_BASE_URL=http://65.1.45.32/api/fraud/api
     container_name: loancrm_fraud_frontend
     restart: unless-stopped
     ports:
@@ -378,7 +401,10 @@ services:
       context: ./BRD-LEGAL-dashboard
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/legal
+        # Config uses VITE_API_URL as API_BASE_URL, appends /agreement-approvals /dashboard /document-validation
+        # authApi.js fixed to use VITE_API_URL + "/auth"
+        # nginx strips /api/legal/ → backend receives /api/agreement-approvals/ /api/auth/ etc.
+        - VITE_API_URL=http://65.1.45.32/api/legal/api
     container_name: loancrm_legal_frontend
     restart: unless-stopped
     ports:
@@ -391,7 +417,9 @@ services:
       context: ./BRD-Operation-Verification-Dashboard
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/operations
+        # Source files fixed to use VITE_API_URL + "/api/dashboard" and "/api/sitevisit"
+        # nginx strips /api/operations/ → backend receives /api/dashboard/ /api/sitevisit/
+        - VITE_API_URL=http://65.1.45.32/api/operations
     container_name: loancrm_operations_frontend
     restart: unless-stopped
     ports:
@@ -404,7 +432,9 @@ services:
       context: ./BRD-ValuationDashboard
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://13.232.219.91/api/valuation
+        # Source files fixed to use VITE_API_URL + "/api/field_valuation/" etc.
+        # nginx strips /api/valuation/ → backend receives /api/field_valuation/ /api/valuation/ etc.
+        - VITE_API_URL=http://65.1.45.32/api/valuation
     container_name: loancrm_valuation_frontend
     restart: unless-stopped
     ports:

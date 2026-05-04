@@ -1,7 +1,7 @@
 // ManageTenantsService.js
 // Bridges ManageTenants.jsx (camelCase frontend) ↔ Django REST API (snake_case backend)
 
-const BASE_URL = "/manage";
+const BASE_URL = (import.meta.env.VITE_API_URL || "") + "/manage";
 
 // ─────────────────────────────────────────────
 // Internal Helpers

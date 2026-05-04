@@ -4,7 +4,7 @@ import axios from "axios";
 // Django main urls.py: path('api/dashboard/', include('dashboard.urls'))
 // App router registers: tasks/ and dashboard/
 // Final URLs: /api/dashboard/tasks/ and /api/dashboard/dashboard/
-const API_BASE_URL = "/api/dashboard";
+const API_BASE_URL = (import.meta.env.VITE_API_URL || "") + "/api/dashboard";
 
 const dashboardAPI = axios.create({
   baseURL: API_BASE_URL,

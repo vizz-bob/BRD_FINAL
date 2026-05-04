@@ -2,7 +2,7 @@
 // Matches Django models: New_Offer_Details, New_Targetting, Dashboard
 // Base: path('letter/', include('Promotional_Offers.urls'))
 
-const BASE_URL = "/letter";
+const BASE_URL = (import.meta.env.VITE_API_URL || "") + "/letter";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ENUMS — mirror Django model choices exactly

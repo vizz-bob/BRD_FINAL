@@ -1,7 +1,7 @@
 // PerformanceTemplateService.js
 // Base URL matches Django: path('performance/', include('performance_template.urls'))
 
-const BASE_URL = "/performance";
+const BASE_URL = (import.meta.env.VITE_API_URL || "") + "/performance";
 
 // ─────────────────────────────────────────
 // Helper

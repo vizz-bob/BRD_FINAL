@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const PROPERTY_CHECK_BASE = "http://127.0.0.1:8000/api/property_check";
-const PROPERTY_STATUS_BASE = "http://127.0.0.1:8000/property_status";
+const PROPERTY_CHECK_BASE = (import.meta.env.VITE_API_URL || "http://127.0.0.1:8000") + "/api/property_check";
+const PROPERTY_STATUS_BASE = (import.meta.env.VITE_API_URL || "http://127.0.0.1:8000") + "/property_status";
 
 export const getPropertyChecks = () => {
   return axios.get(`${PROPERTY_CHECK_BASE}/property-checks/`);
