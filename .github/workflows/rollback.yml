@@ -1,31 +1,51 @@
 name: Rollback Deployment
 
+# Manual trigger only — run from GitHub Actions UI
 on:
   workflow_dispatch:
     inputs:
       reason:
-        description: 'Reason for rollback'
+        description: 'Why are you rolling back?'
         required: true
         default: 'Emergency rollback'
 
 jobs:
   rollback:
+    name: Rollback on EC2
     runs-on: ubuntu-latest
+
     steps:
-      - name: Setup SSH
+      - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Rollback on EC2
+      - name: Rollback to previous version
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'SSHEOF'
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
+            set -e
             cd ${{ secrets.EC2_APP_DIR }}
-            echo "Rolling back..."
-            docker compose down
+
+            echo "=== ROLLBACK STARTED ==="
+            echo "Reason: ${{ github.event.inputs.reason }}"
+
+            echo "=== Pulling previous git commit ==="
+            git log --oneline -5
+            git checkout HEAD~1
+
+            echo "=== Restarting containers with previous code ==="
+            docker compose build --parallel
             docker compose up -d --remove-orphans
+
+            sleep 10
             docker compose ps
-            echo "Rollback complete!"
-          SSHEOF
+
+            echo "=== ✅ Rollback complete ==="
+          ENDSSH
+
+      - name: Rollback summary
+        run: |
+          echo "Rollback triggered by: ${{ github.actor }}"
+          echo "Reason: ${{ github.event.inputs.reason }}"
