@@ -211,7 +211,7 @@ const Login = () => {
     if (!formData.password.trim()) { setError("Password is required."); return; }
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8000/auth/login/", {
+      const res = await fetch("http://65.1.45.32/api/master-admin/auth/login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -239,7 +239,7 @@ const Login = () => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(resetEmail)) { setError("Enter a valid email address."); return; }
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8000/auth/forgot-password/", {
+      const res = await fetch("http://65.1.45.32/api/master-admin/auth/forgot-password/", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: resetEmail }),
       });
@@ -259,7 +259,7 @@ const Login = () => {
     if (newPwd !== confirmPwd) { setError("Passwords do not match."); return; }
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8000/auth/reset-password/", {
+      const res = await fetch("http://65.1.45.32/api/master-admin/auth/reset-password/", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: resetEmail, otp: resetOtp, new_password: newPwd }),
       });

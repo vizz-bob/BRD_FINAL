@@ -1,5 +1,5 @@
 // API Service for Finance Dashboard
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1/finance'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://65.1.45.32/api/finance/api/v1/finance'
 
 class APIService {
   constructor() {

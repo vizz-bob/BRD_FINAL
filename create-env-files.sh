@@ -26,6 +26,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -48,6 +49,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -70,6 +72,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -92,6 +95,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -114,6 +118,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -136,6 +141,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -158,6 +164,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -180,6 +187,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -202,6 +210,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -224,6 +233,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -246,6 +256,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -268,6 +279,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
@@ -290,6 +302,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
+PGSSLMODE=require
 
 CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://${SERVER_IP}
 
