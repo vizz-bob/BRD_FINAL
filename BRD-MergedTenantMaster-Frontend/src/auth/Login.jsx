@@ -1,3 +1,4 @@
+import authService from "../services/authService";
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -49,10 +50,12 @@ export default function Login() {
 
       localStorage.setItem("tenant_access_token", data.access);
       localStorage.setItem("tenant_refresh_token", data.refresh);
+      
 
-      navigate(from, { replace: true });
-    } catch {
-      setError("Network error. Please try again.");
+      window.location.href = "/tenant/dashboard";
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Network error: " + (err?.message || "unknown"));
     } finally {
       setLoading(false);
     }
