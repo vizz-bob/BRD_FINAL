@@ -4,8 +4,8 @@ import axiosInstance from "../utils/axiosInstance";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // ✅ Consistent Keys
-const ACCESS_KEY = "access_token";
-const REFRESH_KEY = "refresh_token";
+const ACCESS_KEY = "tenant_access_token";
+const REFRESH_KEY = "tenant_refresh_token";
 const PERMISSIONS_KEY = "permissions";
 
 const authService = {
@@ -62,7 +62,7 @@ const authService = {
   logout: () => {
     localStorage.clear();
     sessionStorage.clear();
-    window.location.href = "/dashboard";
+    window.location.href = "/tenant/login";
   },
 };
 

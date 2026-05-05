@@ -10,7 +10,7 @@
 //    /api/incentives/
 // ─────────────────────────────────────────────────────────────────
 
-export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+export const BASE_URL = import.meta.env.VITE_API_URL || "http://65.1.45.32/api/sales-crm";
 
 // ══════════════════════════════════════════════
 //  AUTH HELPERS

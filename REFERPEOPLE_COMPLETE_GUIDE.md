@@ -145,35 +145,35 @@ RDS PostgreSQL (Port 5432) — all databases
 
 | Container | Port | URL to Open | What It Is |
 |-----------|------|-------------|------------|
-| website-frontend | 3000 | http://13.201.38.123/ | Public website / loan enquiry form |
-| masteradmin-frontend | 3001 | http://13.201.38.123/master-admin/ | Platform super-admin panel |
-| tenant-frontend | 3002 | http://13.201.38.123/tenant/ | Tenant organisation portal |
-| crm-frontend | 3003 | http://13.201.38.123/crm/ | CRM - leads & customers |
-| finance-frontend | 3004 | http://13.201.38.123/finance/ | Finance & disbursement |
-| salescrm-frontend | 3005 | http://13.201.38.123/sales-crm/ | Sales pipeline |
-| tenantadmin-frontend | 3006 | http://13.201.38.123/tenant-admin/ | Tenant admin panel |
-| channel-frontend | 3007 | http://13.201.38.123/channel/ | Channel partners |
-| fraud-frontend | 3008 | http://13.201.38.123/fraud/ | Fraud detection team |
-| legal-frontend | 3009 | http://13.201.38.123/legal/ | Legal team |
-| operations-frontend | 3010 | http://13.201.38.123/operations/ | Operations verification |
-| valuation-frontend | 3011 | http://13.201.38.123/valuation/ | Property valuation |
+| website-frontend | 3000 | http://65.1.45.32/ | Public website / loan enquiry form |
+| masteradmin-frontend | 3001 | http://65.1.45.32/master-admin/ | Platform super-admin panel |
+| tenant-frontend | 3002 | http://65.1.45.32/tenant/ | Tenant organisation portal |
+| crm-frontend | 3003 | http://65.1.45.32/crm/ | CRM - leads & customers |
+| finance-frontend | 3004 | http://65.1.45.32/finance/ | Finance & disbursement |
+| salescrm-frontend | 3005 | http://65.1.45.32/sales-crm/ | Sales pipeline |
+| tenantadmin-frontend | 3006 | http://65.1.45.32/tenant-admin/ | Tenant admin panel |
+| channel-frontend | 3007 | http://65.1.45.32/channel/ | Channel partners |
+| fraud-frontend | 3008 | http://65.1.45.32/fraud/ | Fraud detection team |
+| legal-frontend | 3009 | http://65.1.45.32/legal/ | Legal team |
+| operations-frontend | 3010 | http://65.1.45.32/operations/ | Operations verification |
+| valuation-frontend | 3011 | http://65.1.45.32/valuation/ | Property valuation |
 
 ### Backend Services (Django REST APIs)
 
 | Container | Port | API Base URL | Django Admin |
 |-----------|------|-------------|--------------|
-| masteradmin-backend | 8001 | http://13.201.38.123/api/master-admin/ | http://13.201.38.123:8001/admin/ |
-| tenant-backend | 8002 | http://13.201.38.123/api/tenant/ | http://13.201.38.123:8002/admin/ |
-| crm-backend | 8003 | http://13.201.38.123/api/crm/ | http://13.201.38.123:8003/admin/ |
-| finance-backend | 8004 | http://13.201.38.123/api/finance/ | http://13.201.38.123:8004/admin/ |
-| agents-backend | 8005 | http://13.201.38.123/api/agents/ | http://13.201.38.123:8005/admin/ |
-| channel-backend | 8006 | http://13.201.38.123/api/channel/ | http://13.201.38.123:8006/admin/ |
-| fraud-backend | 8007 | http://13.201.38.123/api/fraud/ | http://13.201.38.123:8007/admin/ |
-| legal-backend | 8008 | http://13.201.38.123/api/legal/ | http://13.201.38.123:8008/admin/ |
-| operations-backend | 8009 | http://13.201.38.123/api/operations/ | http://13.201.38.123:8009/admin/ |
-| salescrm-backend | 8010 | http://13.201.38.123/api/sales-crm/ | http://13.201.38.123:8010/admin/ |
-| tenantadmin-backend | 8011 | http://13.201.38.123/api/tenant-admin/ | http://13.201.38.123:8011/admin/ |
-| valuation-backend | 8012 | http://13.201.38.123/api/valuation/ | http://13.201.38.123:8012/admin/ |
+| masteradmin-backend | 8001 | http://65.1.45.32/api/master-admin/ | http://65.1.45.32:8001/admin/ |
+| tenant-backend | 8002 | http://65.1.45.32/api/tenant/ | http://65.1.45.32:8002/admin/ |
+| crm-backend | 8003 | http://65.1.45.32/api/crm/ | http://65.1.45.32:8003/admin/ |
+| finance-backend | 8004 | http://65.1.45.32/api/finance/ | http://65.1.45.32:8004/admin/ |
+| agents-backend | 8005 | http://65.1.45.32/api/agents/ | http://65.1.45.32:8005/admin/ |
+| channel-backend | 8006 | http://65.1.45.32/api/channel/ | http://65.1.45.32:8006/admin/ |
+| fraud-backend | 8007 | http://65.1.45.32/api/fraud/ | http://65.1.45.32:8007/admin/ |
+| legal-backend | 8008 | http://65.1.45.32/api/legal/ | http://65.1.45.32:8008/admin/ |
+| operations-backend | 8009 | http://65.1.45.32/api/operations/ | http://65.1.45.32:8009/admin/ |
+| salescrm-backend | 8010 | http://65.1.45.32/api/sales-crm/ | http://65.1.45.32:8010/admin/ |
+| tenantadmin-backend | 8011 | http://65.1.45.32/api/tenant-admin/ | http://65.1.45.32:8011/admin/ |
+| valuation-backend | 8012 | http://65.1.45.32/api/valuation/ | http://65.1.45.32:8012/admin/ |
 
 ### Infrastructure Services
 
@@ -453,7 +453,7 @@ DB_HOST=referpeople-db.cju28y6c0s6d.ap-south-1.rds.amazonaws.com
 DB_PORT=5432
 PGSSLMODE=require             ← required for RDS SSL
 
-CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://13.201.38.123
+CORS_ALLOWED_ORIGINS=https://referpeople.in,https://www.referpeople.in,http://65.1.45.32
 
 AWS_ACCESS_KEY_ID=your-key
 AWS_SECRET_ACCESS_KEY=your-secret
@@ -577,7 +577,7 @@ done
 for path in / /master-admin/ /crm/ /finance/ /sales-crm/ /tenant-admin/ \
             /channel/ /fraud/ /legal/ /operations/ /valuation/ /tenant/; do
   STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 http://localhost$path)
-  echo "$STATUS  http://13.201.38.123$path"
+  echo "$STATUS  http://65.1.45.32$path"
 done
 ```
 
@@ -642,12 +642,12 @@ The Super Admin has full platform access — they can create tenants, manage all
 
 Open in browser:
 ```
-http://13.201.38.123/master-admin/
+http://65.1.45.32/master-admin/
 ```
 
 Or the Django admin panel (raw database access):
 ```
-http://13.201.38.123:8001/admin/
+http://65.1.45.32:8001/admin/
 ```
 
 ### Super Admin Credentials (Created During Setup)
@@ -679,11 +679,11 @@ From the Master Admin dashboard (`/master-admin/`):
 
 ### Creating a New Tenant (Organisation)
 
-1. Log in at `http://13.201.38.123/master-admin/`
+1. Log in at `http://65.1.45.32/master-admin/`
 2. Go to **Tenants** → **Add New Tenant**
 3. Fill in organisation name, contact details, subscription plan
 4. Click **Create** — the tenant gets their own login credentials
-5. The Tenant Admin can now log in at `http://13.201.38.123/tenant-admin/`
+5. The Tenant Admin can now log in at `http://65.1.45.32/tenant-admin/`
 
 ---
 
@@ -704,12 +704,12 @@ Admins are organisation-level administrators. They manage their team, set up bra
 ```bash
 docker compose exec tenantadmin-backend python manage.py createsuperuser
 # Or use the Django admin panel:
-# http://13.201.38.123:8011/admin/
+# http://65.1.45.32:8011/admin/
 ```
 
 **Method 2: Via Master Admin Panel**
 
-1. Log in at `http://13.201.38.123/master-admin/`
+1. Log in at `http://65.1.45.32/master-admin/`
 2. Go to **Tenants** → select the tenant organisation
 3. Click **Manage Users** → **Add Admin User**
 4. Fill in: Name, Email, Phone, Role = "Admin"
@@ -718,7 +718,7 @@ docker compose exec tenantadmin-backend python manage.py createsuperuser
 ### Tenant Admin Login
 
 ```
-URL:      http://13.201.38.123/tenant-admin/
+URL:      http://65.1.45.32/tenant-admin/
 Email:    (created above)
 Password: (set during creation)
 ```
@@ -755,7 +755,7 @@ Users are staff members — CRM agents, sales agents, field agents, operations s
 
 **Via Tenant Admin Panel:**
 
-1. Log in at `http://13.201.38.123/tenant-admin/`
+1. Log in at `http://65.1.45.32/tenant-admin/`
 2. Go to **Users** → **Add User**
 3. Fill in:
    - Full Name
@@ -789,15 +789,15 @@ print(f'User created: {user.email}')
 
 | Role | Dashboard URL |
 |------|--------------|
-| CRM Agent | http://13.201.38.123/crm/ |
-| Sales Agent | http://13.201.38.123/sales-crm/ |
-| Finance Officer | http://13.201.38.123/finance/ |
-| Field Agent | http://13.201.38.123/ (agents app — mobile) |
-| Channel Partner | http://13.201.38.123/channel/ |
-| Fraud Analyst | http://13.201.38.123/fraud/ |
-| Legal Officer | http://13.201.38.123/legal/ |
-| Operations Staff | http://13.201.38.123/operations/ |
-| Valuation Officer | http://13.201.38.123/valuation/ |
+| CRM Agent | http://65.1.45.32/crm/ |
+| Sales Agent | http://65.1.45.32/sales-crm/ |
+| Finance Officer | http://65.1.45.32/finance/ |
+| Field Agent | http://65.1.45.32/ (agents app — mobile) |
+| Channel Partner | http://65.1.45.32/channel/ |
+| Fraud Analyst | http://65.1.45.32/fraud/ |
+| Legal Officer | http://65.1.45.32/legal/ |
+| Operations Staff | http://65.1.45.32/operations/ |
+| Valuation Officer | http://65.1.45.32/valuation/ |
 
 ### Update User Data
 
@@ -840,7 +840,7 @@ print('User deactivated')
 
 ### Creating a Loan Application
 
-1. CRM agent logs in at `http://13.201.38.123/crm/`
+1. CRM agent logs in at `http://65.1.45.32/crm/`
 2. Click **Leads** → **New Lead** → fill customer details
 3. Lead is qualified → converted to **Loan Application**
 4. Application goes through the pipeline:
@@ -848,14 +848,14 @@ print('User deactivated')
 
 ### Checking Loan Status
 
-- CRM Dashboard: `http://13.201.38.123/crm/` — see all leads and applications
-- Sales CRM: `http://13.201.38.123/sales-crm/` — see pipeline stage
-- Finance Dashboard: `http://13.201.38.123/finance/` — see disbursement queue
+- CRM Dashboard: `http://65.1.45.32/crm/` — see all leads and applications
+- Sales CRM: `http://65.1.45.32/sales-crm/` — see pipeline stage
+- Finance Dashboard: `http://65.1.45.32/finance/` — see disbursement queue
 
 ### Property Valuation Workflow
 
 1. Loan application is created and flagged as needing property valuation
-2. Valuation officer logs in at `http://13.201.38.123/valuation/`
+2. Valuation officer logs in at `http://65.1.45.32/valuation/`
 3. Click **Assignments** → finds the new assignment
 4. Visits the property, fills valuation report
 5. Uploads report in the **Valuation Dashboard**
@@ -866,10 +866,10 @@ print('User deactivated')
 Each backend has a full Django admin at its port:
 
 ```
-Master Admin:   http://13.201.38.123:8001/admin/
-CRM:            http://13.201.38.123:8003/admin/
-Finance:        http://13.201.38.123:8004/admin/
-Valuation:      http://13.201.38.123:8012/admin/
+Master Admin:   http://65.1.45.32:8001/admin/
+CRM:            http://65.1.45.32:8003/admin/
+Finance:        http://65.1.45.32:8004/admin/
+Valuation:      http://65.1.45.32:8012/admin/
 ```
 
 Log in with the superuser credentials for that backend to edit any record directly.
@@ -1182,10 +1182,10 @@ Script to generate all 13 `.env` files. Edit the variables at the top (DB_PASSWO
 
 | What | URL |
 |------|-----|
-| Main website | http://referpeople.in (or http://13.201.38.123/) |
-| Super Admin | http://13.201.38.123/master-admin/ |
-| CRM | http://13.201.38.123/crm/ |
-| Finance | http://13.201.38.123/finance/ |
+| Main website | http://referpeople.in (or http://65.1.45.32/) |
+| Super Admin | http://65.1.45.32/master-admin/ |
+| CRM | http://65.1.45.32/crm/ |
+| Finance | http://65.1.45.32/finance/ |
 | GitHub Actions | https://github.com/vizz-bob/BRD_FINAL/actions |
 
 ### Key Credentials

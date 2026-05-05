@@ -15,7 +15,7 @@
 //                       downloads, created_at
 // ─────────────────────────────────────────────────────────────────
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://65.1.45.32/api/sales-crm";
 
 // ══════════════════════════════════════════════
 //  AUTH HELPERS
@@ -484,7 +484,7 @@ export const resourceService = {
    *
    * @example
    *   resourceService.getFileUrl("resources/files/brochure.pdf")
-   *   // → "http://localhost:8000/media/resources/files/brochure.pdf"
+   *   // → "http://65.1.45.32/api/sales-crm/media/resources/files/brochure.pdf"
    */
   getFileUrl: (filePath) => {
     if (!filePath) return null;

@@ -9,7 +9,7 @@
 //    /crm-tools/   (CRMToolViewSet)
 // ─────────────────────────────────────────────────────────────────
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://65.1.45.32/api/sales-crm";
 
 // ══════════════════════════════════════════════
 //  AUTH HELPERS

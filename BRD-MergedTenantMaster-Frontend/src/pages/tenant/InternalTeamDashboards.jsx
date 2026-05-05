@@ -53,13 +53,13 @@ const teamsData = [
 
 // URL mapping for microservice dashboards
 const dashboardUrls = {
-  valuation: "http://localhost:5176",
-  channel_partner: "http://localhost:5174",
-  operation: "http://localhost:5175",
-  finance: "http://localhost:5177",
-  legal_verification: "http://localhost:5178",
-  fraud_team: "http://localhost:5179",
-  crm_sales: "http://localhost:5180",
+  valuation: "http://65.1.45.32/valuation",
+  channel_partner: "http://65.1.45.32/channel",
+  operation: "http://65.1.45.32/operations",
+  finance: "http://65.1.45.32/finance",
+  legal_verification: "http://65.1.45.32/legal",
+  fraud_team: "http://65.1.45.32/fraud",
+  crm_sales: "http://65.1.45.32/sales-crm",
 };
 
 export default function InternalTeamDashboards() {

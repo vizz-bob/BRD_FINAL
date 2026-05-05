@@ -8,7 +8,7 @@
 const API_CONFIG = {
   // Development environment
   development: {
-    API_BASE_URL: 'http://localhost:8000/api',
+    API_BASE_URL: 'http://65.1.45.32/api/legal/api',
     TIMEOUT: 30000, // 30 seconds
     RETRY_ATTEMPTS: 3,
     RETRY_DELAY: 1000, // 1 second
