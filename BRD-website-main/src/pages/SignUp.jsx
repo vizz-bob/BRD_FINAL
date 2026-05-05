@@ -254,7 +254,7 @@ export default function SignUp() {
         current_aum: formData.current_aum, require_branches: formData.require_branches,
         number_of_branches: formData.require_branches === "Yes" ? formData.number_of_branches : "0",
       };
-      const res = await fetch("http://65.1.45.32/api/master-admin/auth/register/", {
+      const res = await fetch("http://65.1.45.32/api/website/auth/register/", {
         method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload),
       });
       const d = await res.json();

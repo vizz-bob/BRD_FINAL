@@ -255,6 +255,21 @@ services:
       redis:
         condition: service_healthy
 
+  website-backend:
+    build:
+      context: ./BRD-website-main-backend
+      dockerfile: Dockerfile
+    container_name: loancrm_website_backend
+    restart: unless-stopped
+    ports:
+      - "8013:8000"
+    env_file: ./BRD-website-main-backend/.env
+    networks:
+      - loancrm_network
+    depends_on:
+      redis:
+        condition: service_healthy
+
   # ── Frontends (each on unique host port) ──────────────────────────────────
   website-frontend:
     build:
